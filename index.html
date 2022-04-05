@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Air Raid Alert API (Ukraine)</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="data:text/css,body%7B%0Amargin%3A%200%20auto%3B%0Abackground%3A%20%23222222%3B%0Afont%2Dfamily%3A%20Roboto%2C%20sans%2Dserif%3B%0Acolor%3A%20%23EEE%3B%0Aline%2Dheight%3A%201%3B%0Amax%2Dwidth%3A%20960px%3B%0Apadding%3A%2030px%3B%0A%7D%0Ah1%2C%20h2%2C%20h3%2C%20h4%20%7B%0Afont%2Dweight%3A%20400%3B%0A%7D%0Ah1%2C%20h2%2C%20h3%2C%20h4%2C%20h5%2C%20p%20%7B%0Amargin%2Dbottom%3A%2024px%3B%0Apadding%3A%200%3B%0A%7D%0Ah1%20%7B%0Afont%2Dsize%3A%2048px%3B%0A%7D%0Ah2%20%7B%0Afont%2Dsize%3A%2036px%3B%0Amargin%3A%2024px%200%206px%3B%0A%7D%0Ah3%20%7B%0Afont%2Dsize%3A%2024px%3B%0A%7D%0Ah4%20%7B%0Afont%2Dsize%3A%2021px%3B%0A%7D%0Ah5%20%7B%0Afont%2Dsize%3A%2018px%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%2361BFC1%3B%0Amargin%3A%200%3B%0Apadding%3A%200%3B%0Atext%2Ddecoration%3A%20none%3B%0Avertical%2Dalign%3A%20baseline%3B%0A%7D%0Aa%3Ahover%20%7B%0Atext%2Ddecoration%3A%20underline%3B%0A%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23466B6C%3B%0A%7D%0Aul%2C%20ol%20%7B%0Apadding%3A%200%3B%0Amargin%3A%200%3B%0A%7D%0Ali%20%7B%0Aline%2Dheight%3A%2024px%3B%0A%7D%0Ali%20ul%2C%20li%20ul%20%7B%0Amargin%2Dleft%3A%2024px%3B%0A%7D%0Ap%2C%20ul%2C%20ol%20%7B%0Afont%2Dsize%3A%2016px%3B%0Aline%2Dheight%3A%2024px%3B%0A%0A%7D%0Apre%20%7B%0Apadding%3A%200px%2024px%3B%0Amax%2Dwidth%3A%20800px%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%0A%0Aborder%2Dleft%3A%200%2E5rem%20solid%20%23444%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20Andale%20Mono%2C%20monospace%3B%0Aline%2Dheight%3A%201%2E5%3B%0A%0A%7D%0Aaside%20%7B%0Adisplay%3A%20block%3B%0Afloat%3A%20right%3B%0Awidth%3A%20390px%3B%0A%7D%0Ablockquote%20%7B%0Aborder%2Dleft%3A%2E5em%20solid%20%23eee%3B%0Apadding%3A%200%202em%3B%0Amargin%2Dleft%3A0%3B%0A%0A%7D%0Ablockquote%20cite%20%7B%0Afont%2Dsize%3A14px%3B%0Aline%2Dheight%3A20px%3B%0Acolor%3A%23bfbfbf%3B%0A%7D%0Ablockquote%20cite%3Abefore%20%7B%0Acontent%3A%20%27%5C2014%20%5C00A0%27%3B%0A%7D%0Ablockquote%20p%20%7B%20color%3A%20%23666%3B%0A%0A%7D%0Ahr%20%7B%0Awidth%3A%20540px%3B%0Atext%2Dalign%3A%20left%3B%0Amargin%3A%200%20auto%200%200%3B%0Acolor%3A%20%23999%3B%0A%7D%0A%0Abutton%2C%0Ainput%2C%0Aselect%2C%0Atextarea%20%7B%0Afont%2Dsize%3A%20100%25%3B%0Amargin%3A%200%3B%0Avertical%2Dalign%3A%20baseline%3B%0A%2Avertical%2Dalign%3A%20middle%3B%0A%7D%0Abutton%2C%20input%20%7B%0Aline%2Dheight%3A%20normal%3B%0A%2Aoverflow%3A%20visible%3B%0A%7D%0Abutton%3A%3A%2Dmoz%2Dfocus%2Dinner%2C%20input%3A%3A%2Dmoz%2Dfocus%2Dinner%20%7B%0Aborder%3A%200%3B%0Apadding%3A%200%3B%0A%7D%0Abutton%2C%0Ainput%5Btype%3D%22button%22%5D%2C%0Ainput%5Btype%3D%22reset%22%5D%2C%0Ainput%5Btype%3D%22submit%22%5D%20%7B%0Acursor%3A%20pointer%3B%0A%2Dwebkit%2Dappearance%3A%20button%3B%0A%7D%0Ainput%5Btype%3Dcheckbox%5D%2C%20input%5Btype%3Dradio%5D%20%7B%0Acursor%3A%20pointer%3B%0A%7D%0A%0Ainput%3Anot%28%5Btype%3D%22image%22%5D%29%2C%20textarea%20%7B%0A%2Dwebkit%2Dbox%2Dsizing%3A%20content%2Dbox%3B%0A%2Dmoz%2Dbox%2Dsizing%3A%20content%2Dbox%3B%0Abox%2Dsizing%3A%20content%2Dbox%3B%0A%7D%0Ainput%5Btype%3D%22search%22%5D%20%7B%0A%2Dwebkit%2Dappearance%3A%20textfield%3B%0A%2Dwebkit%2Dbox%2Dsizing%3A%20content%2Dbox%3B%0A%2Dmoz%2Dbox%2Dsizing%3A%20content%2Dbox%3B%0Abox%2Dsizing%3A%20content%2Dbox%3B%0A%7D%0Ainput%5Btype%3D%22search%22%5D%3A%3A%2Dwebkit%2Dsearch%2Ddecoration%20%7B%0A%2Dwebkit%2Dappearance%3A%20none%3B%0A%7D%0Alabel%2C%0Ainput%2C%0Aselect%2C%0Atextarea%20%7B%0Afont%2Dfamily%3A%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2013px%3B%0Afont%2Dweight%3A%20normal%3B%0Aline%2Dheight%3A%20normal%3B%0Amargin%2Dbottom%3A%2018px%3B%0A%7D%0Ainput%5Btype%3Dcheckbox%5D%2C%20input%5Btype%3Dradio%5D%20%7B%0Acursor%3A%20pointer%3B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Ainput%5Btype%3Dtext%5D%2C%0Ainput%5Btype%3Dpassword%5D%2C%0Atextarea%2C%0Aselect%20%7B%0Adisplay%3A%20inline%2Dblock%3B%0Awidth%3A%20210px%3B%0Apadding%3A%204px%3B%0Afont%2Dsize%3A%2013px%3B%0Afont%2Dweight%3A%20normal%3B%0Aline%2Dheight%3A%2018px%3B%0Aheight%3A%2018px%3B%0Acolor%3A%20%23808080%3B%0Aborder%3A%201px%20solid%20%23ccc%3B%0A%2Dwebkit%2Dborder%2Dradius%3A%203px%3B%0A%2Dmoz%2Dborder%2Dradius%3A%203px%3B%0Aborder%2Dradius%3A%203px%3B%0A%7D%0Aselect%2C%20input%5Btype%3Dfile%5D%20%7B%0Aheight%3A%2027px%3B%0Aline%2Dheight%3A%2027px%3B%0A%7D%0Atextarea%20%7B%0Aheight%3A%20auto%3B%0A%7D%0A%0A%3A%2Dmoz%2Dplaceholder%20%7B%0Acolor%3A%20%23bfbfbf%3B%0A%7D%0A%3A%3A%2Dwebkit%2Dinput%2Dplaceholder%20%7B%0Acolor%3A%20%23bfbfbf%3B%0A%7D%0Ainput%5Btype%3Dtext%5D%2C%0Ainput%5Btype%3Dpassword%5D%2C%0Aselect%2C%0Atextarea%20%7B%0A%2Dwebkit%2Dtransition%3A%20border%20linear%200%2E2s%2C%20box%2Dshadow%20linear%200%2E2s%3B%0A%2Dmoz%2Dtransition%3A%20border%20linear%200%2E2s%2C%20box%2Dshadow%20linear%200%2E2s%3B%0Atransition%3A%20border%20linear%200%2E2s%2C%20box%2Dshadow%20linear%200%2E2s%3B%0A%2Dwebkit%2Dbox%2Dshadow%3A%20inset%200%201px%203px%20rgba%280%2C%200%2C%200%2C%200%2E1%29%3B%0A%2Dmoz%2Dbox%2Dshadow%3A%20inset%200%201px%203px%20rgba%280%2C%200%2C%200%2C%200%2E1%29%3B%0Abox%2Dshadow%3A%20inset%200%201px%203px%20rgba%280%2C%200%2C%200%2C%200%2E1%29%3B%0A%7D%0Ainput%5Btype%3Dtext%5D%3Afocus%2C%20input%5Btype%3Dpassword%5D%3Afocus%2C%20textarea%3Afocus%20%7B%0Aoutline%3A%20none%3B%0Aborder%2Dcolor%3A%20rgba%2882%2C%20168%2C%20236%2C%200%2E8%29%3B%0A%2Dwebkit%2Dbox%2Dshadow%3A%20inset%200%201px%203px%20rgba%280%2C%200%2C%200%2C%200%2E1%29%2C%200%200%208px%20rgba%2882%2C%20168%2C%20236%2C%200%2E6%29%3B%0A%2Dmoz%2Dbox%2Dshadow%3A%20inset%200%201px%203px%20rgba%280%2C%200%2C%200%2C%200%2E1%29%2C%200%200%208px%20rgba%2882%2C%20168%2C%20236%2C%200%2E6%29%3B%0Abox%2Dshadow%3A%20inset%200%201px%203px%20rgba%280%2C%200%2C%200%2C%200%2E1%29%2C%200%200%208px%20rgba%2882%2C%20168%2C%20236%2C%200%2E6%29%3B%0A%7D%0A%0Abutton%20%7B%0Adisplay%3A%20inline%2Dblock%3B%0Apadding%3A%204px%2014px%3B%0Afont%2Dfamily%3A%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%2018px%3B%0A%2Dwebkit%2Dborder%2Dradius%3A%204px%3B%0A%2Dmoz%2Dborder%2Dradius%3A%204px%3B%0Aborder%2Dradius%3A%204px%3B%0A%2Dwebkit%2Dbox%2Dshadow%3A%20inset%200%201px%200%20rgba%28255%2C%20255%2C%20255%2C%200%2E2%29%2C%200%201px%202px%20rgba%280%2C%200%2C%200%2C%200%2E05%29%3B%0A%2Dmoz%2Dbox%2Dshadow%3A%20inset%200%201px%200%20rgba%28255%2C%20255%2C%20255%2C%200%2E2%29%2C%200%201px%202px%20rgba%280%2C%200%2C%200%2C%200%2E05%29%3B%0Abox%2Dshadow%3A%20inset%200%201px%200%20rgba%28255%2C%20255%2C%20255%2C%200%2E2%29%2C%200%201px%202px%20rgba%280%2C%200%2C%200%2C%200%2E05%29%3B%0Abackground%2Dcolor%3A%20%230064cd%3B%0Abackground%2Drepeat%3A%20repeat%2Dx%3B%0Abackground%2Dimage%3A%20%2Dkhtml%2Dgradient%28linear%2C%20left%20top%2C%20left%20bottom%2C%20from%28%23049cdb%29%2C%20to%28%230064cd%29%29%3B%0Abackground%2Dimage%3A%20%2Dmoz%2Dlinear%2Dgradient%28top%2C%20%23049cdb%2C%20%230064cd%29%3B%0Abackground%2Dimage%3A%20%2Dms%2Dlinear%2Dgradient%28top%2C%20%23049cdb%2C%20%230064cd%29%3B%0Abackground%2Dimage%3A%20%2Dwebkit%2Dgradient%28linear%2C%20left%20top%2C%20left%20bottom%2C%20color%2Dstop%280%25%2C%20%23049cdb%29%2C%20color%2Dstop%28100%25%2C%20%230064cd%29%29%3B%0Abackground%2Dimage%3A%20%2Dwebkit%2Dlinear%2Dgradient%28top%2C%20%23049cdb%2C%20%230064cd%29%3B%0Abackground%2Dimage%3A%20%2Do%2Dlinear%2Dgradient%28top%2C%20%23049cdb%2C%20%230064cd%29%3B%0Abackground%2Dimage%3A%20linear%2Dgradient%28top%2C%20%23049cdb%2C%20%230064cd%29%3B%0Acolor%3A%20%23fff%3B%0Atext%2Dshadow%3A%200%20%2D1px%200%20rgba%280%2C%200%2C%200%2C%200%2E25%29%3B%0Aborder%3A%201px%20solid%20%23004b9a%3B%0Aborder%2Dbottom%2Dcolor%3A%20%23003f81%3B%0A%2Dwebkit%2Dtransition%3A%200%2E1s%20linear%20all%3B%0A%2Dmoz%2Dtransition%3A%200%2E1s%20linear%20all%3B%0Atransition%3A%200%2E1s%20linear%20all%3B%0Aborder%2Dcolor%3A%20%230064cd%20%230064cd%20%23003f81%3B%0Aborder%2Dcolor%3A%20rgba%280%2C%200%2C%200%2C%200%2E1%29%20rgba%280%2C%200%2C%200%2C%200%2E1%29%20rgba%280%2C%200%2C%200%2C%200%2E25%29%3B%0A%7D%0Abutton%3Ahover%20%7B%0Acolor%3A%20%23fff%3B%0Abackground%2Dposition%3A%200%20%2D15px%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Abutton%3Aactive%20%7B%0A%2Dwebkit%2Dbox%2Dshadow%3A%20inset%200%203px%207px%20rgba%280%2C%200%2C%200%2C%200%2E15%29%2C%200%201px%202px%20rgba%280%2C%200%2C%200%2C%200%2E05%29%3B%0A%2Dmoz%2Dbox%2Dshadow%3A%20inset%200%203px%207px%20rgba%280%2C%200%2C%200%2C%200%2E15%29%2C%200%201px%202px%20rgba%280%2C%200%2C%200%2C%200%2E05%29%3B%0Abox%2Dshadow%3A%20inset%200%203px%207px%20rgba%280%2C%200%2C%200%2C%200%2E15%29%2C%200%201px%202px%20rgba%280%2C%200%2C%200%2C%200%2E05%29%3B%0A%7D%0Abutton%3A%3A%2Dmoz%2Dfocus%2Dinner%20%7B%0Apadding%3A%200%3B%0Aborder%3A%200%3B%0A%7D%0A" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Air Raid Alert API (Ukraine)</h1>
+</header>
+<p>This API allows you to query &amp; listen to air raid alerts in Ukraine.</p>
+<p>Data is taken from <a href="https://telegram.me/air_alert_ua" class="uri">https://telegram.me/air_alert_ua</a> via an unstable HTTP API.</p>
+<p>Events are usually delayed for up to 5 seconds.</p>
+<p>API is rate-limited. If you spam more than 1 RPS, you will be throttled.</p>
+<h2 id="endpoints">Endpoints</h2>
+<h3 id="apistates"><code>/api/states</code></h3>
+<p>Returns the list of states with their statuses.</p>
+<p>Example response:</p>
+<pre><code>{
+  &quot;states&quot;: [
+    {
+      &quot;id&quot;: 1,
+      &quot;name&quot;: &quot;Вінницька область&quot;,
+      &quot;alert&quot;: false,
+      &quot;changed&quot;: &quot;2022-04-05T06:12:52+03:00&quot;
+    },
+    {
+      &quot;id&quot;:2,
+      &quot;name&quot;: &quot;Волинська область&quot;,
+      &quot;alert&quot;: false,
+      &quot;changed&quot;: &quot;2022-04-05T06:13:06+03:00&quot;
+    },
+    // ...
+  ]
+}</code></pre>
+<h3 id="apistateslive"><code>/api/states/live</code></h3>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">SSE</a> endpoint which yields alert events in real time.</p>
+<p>Example events:</p>
+<pre><code>event: hello
+data: null
+
+event: ping
+data: null
+
+event: update
+data: {&quot;state&quot;:{&quot;id&quot;:12,&quot;name&quot;:&quot;Львівська область&quot;,&quot;alert&quot;:false,&quot;changed&quot;:&quot;2022-04-05T06:14:56+03:00&quot;}}</code></pre>
+<h2 id="use-the-source-luke">Use the source, Luke</h2>
+<p>Made by <a href="https://github.com/and3rson">Andrew Dunai</a>.</p>
+<p>Source code for this service can be found here: <a href="https://github.com/and3rson/raid" class="uri">https://github.com/and3rson/raid</a></p>
+</body>
+</html>
