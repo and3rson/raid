@@ -46,8 +46,8 @@ func CreateWebRouter() *mux.Router {
 
 	webMux := mux.NewRouter()
 	apiMux := webMux.PathPrefix("/api").Subrouter()
-	lmt := tollbooth.NewLimiter(1, &limiter.ExpirableOptions{DefaultExpirationTTL: time.Hour})
-	// lmt.SetIPLookups([]string{"RemoteAddr", "X-Forwarded-For", "X-Real-IP"})
+	lmt := tollbooth.NewLimiter(10, &limiter.ExpirableOptions{DefaultExpirationTTL: time.Hour})
+	lmt.SetIPLookups([]string{"RemoteAddr", "X-Forwarded-For", "X-Real-IP"})
 	lmt.SetOverrideDefaultResponseWriter(true)
 	lmt.SetOnLimitReached(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", "application/json")
