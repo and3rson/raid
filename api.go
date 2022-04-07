@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"os"
+	"strings"
 	"time"
 
 	_ "embed"
@@ -13,8 +15,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//go:generate pandoc -f markdown -s index.md -c style.css --metadata "title=Air Raid Alert API (Ukraine)" --self-contained -o index.html
-//go:embed index.html
+//go:generate pandoc -f markdown -s assets/index.md -c assets/style.css --metadata "title=Air Raid Alert API (Ukraine)" --self-contained -o assets/index.html
+//go:embed assets/index.html
 var indexContent []byte
 
 type StatesResponse struct {
@@ -27,10 +29,25 @@ type PollResponse struct {
 }
 
 func CreateWebRouter() *mux.Router {
+	var apiKeys []string
+	apiKeysMap := make(map[string]bool)
+	for _, key := range strings.Split(os.Getenv("API_KEYS"), ",") {
+		key = strings.TrimSpace(key)
+		if len(key) == 0 {
+			continue
+		}
+		apiKeys = append(apiKeys, key)
+		apiKeysMap[key] = true
+	}
+	if len(apiKeys) == 0 {
+		log.Fatal("api: no API_KEYS defined in environment")
+	}
+	log.Infof("api: load %d keys from API_KEYS env var", len(apiKeys))
+
 	webMux := mux.NewRouter()
 	apiMux := webMux.PathPrefix("/api").Subrouter()
-	lmt := tollbooth.NewLimiter(4, &limiter.ExpirableOptions{DefaultExpirationTTL: time.Hour})
-	lmt.SetIPLookups([]string{"RemoteAddr", "X-Forwarded-For", "X-Real-IP"})
+	lmt := tollbooth.NewLimiter(1, &limiter.ExpirableOptions{DefaultExpirationTTL: time.Hour})
+	// lmt.SetIPLookups([]string{"RemoteAddr", "X-Forwarded-For", "X-Real-IP"})
 	lmt.SetOverrideDefaultResponseWriter(true)
 	lmt.SetOnLimitReached(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", "application/json")
@@ -38,25 +55,45 @@ func CreateWebRouter() *mux.Router {
 		enc := json.NewEncoder(w)
 		_ = enc.Encode(map[string]string{"error": "Too many requests"})
 	})
-	apiMux.Handle("/states", tollbooth.LimitFuncHandler(lmt, func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Add("Content-Type", "application/json")
-		w.WriteHeader(200)
-		enc := json.NewEncoder(w)
+	lmt.SetHeader("X-API-Key", apiKeys)
+
+	// First middleware will be applied last.
+	apiMux.Use(func(h http.Handler) http.Handler {
+		return tollbooth.LimitHandler(lmt, h)
+	})
+	apiMux.Use(func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+			key := r.Header.Get("x-api-key")
+			if _, ok := apiKeysMap[key]; !ok {
+				rw.Header().Add("Content-Type", "application/json")
+				rw.WriteHeader(403)
+				enc := json.NewEncoder(rw)
+				_ = enc.Encode(map[string]string{"error": "Unknown or missing X-API-Key value"})
+				return
+			}
+			next.ServeHTTP(rw, r)
+		})
+	})
+
+	apiMux.HandleFunc("/states", func(rw http.ResponseWriter, r *http.Request) {
+		rw.Header().Add("Content-Type", "application/json")
+		rw.WriteHeader(200)
+		enc := json.NewEncoder(rw)
 		response := StatesResponse{
 			States,
 			LastUpdate,
 		}
 		_ = enc.Encode(response)
-	}))
-	apiMux.Handle("/states/live", tollbooth.LimitFuncHandler(lmt, func(w http.ResponseWriter, r *http.Request) {
+	})
+	apiMux.HandleFunc("/states/live", func(rw http.ResponseWriter, r *http.Request) {
 		log.Infof("api: subscribe to default topic")
 		events := DefaultTopic.Subscribe()
 		defer func() {
 			log.Infof("api: unsubscribe from default topic")
 			DefaultTopic.Unsubscribe(events)
 		}()
-		w.Header().Set("Content-Type", "text/event-stream")
-		sse := NewSSEEncoder(w)
+		rw.Header().Set("Content-Type", "text/event-stream")
+		sse := NewSSEEncoder(rw)
 		if err := sse.Write("hello", nil); err != nil {
 			log.Errorf("api: send SSE hello: %s", err)
 		}
@@ -78,7 +115,7 @@ func CreateWebRouter() *mux.Router {
 				}
 			}
 		}
-	}))
+	})
 	webMux.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
 		rw.Header().Add("Content-Type", "text/html; charset=utf-8")
 		rw.WriteHeader(200)

@@ -1,5 +1,14 @@
 ECR_URL := 193635214029.dkr.ecr.eu-central-1.amazonaws.com/raid
 
+all: init run
+
+init:
+	go get
+
+run:
+	go generate .
+	go run .
+
 build:
 	docker build -t $(ECR_URL) .
 

@@ -8,7 +8,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-const TimezoneName = "Europe/Kiev"
 var Timezone *time.Location
 
 func main() {
