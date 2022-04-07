@@ -5,6 +5,8 @@ services:
     image: 193635214029.dkr.ecr.eu-central-1.amazonaws.com/raid
     build:
       context: .
+    environment:
+      API_KEYS:
     restart: always
     ports:
       - 10101:10101

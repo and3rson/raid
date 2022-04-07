@@ -10,7 +10,7 @@ Production: <https://alerts.dun.ai/>
 # Local:
 make run API_KEYS=foo,bar,baz
 # Docker:
-docker-compose up --build
+API_KEYS=foo,bar,baz docker-compose up --build
 
 curl 127.0.0.1:10101/api/states -H 'X-API-Key: foo'
 ```
