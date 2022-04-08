@@ -1,10 +1,10 @@
 This API allows you to query & listen to air raid alerts in Ukraine.
 
-Data is taken from <https://telegram.me/air_alert_ua> via an unstable HTTP API.
+Data is taken from <https://telegram.me/air_alert_ua> via HTTP API.
 
 Events are usually delayed for up to 5 seconds.
 
-API is rate-limited. If you spam more than 10 RPS, you will be throttled.
+Only states are supported at this moment - 24 total plus Kyiv city. Crimea is absent from this list since no information is available. But we all know that Crimea is Ukraine.
 
 ## Authentication
 
@@ -12,6 +12,8 @@ You will need a key to use this API.
 
   - To request a key, please send me an email (<a@dun.ai>) or ping me in Telegram ([\@andunai](https://t.me/andunai)).
   - Include the key with every request in `X-API-Key` header.
+
+Please be aware that this API is rate-limited. If you spam more than 10 RPS, you will be throttled.
 
 ## Endpoints
 

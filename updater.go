@@ -9,34 +9,35 @@ import (
 
 var LastUpdate time.Time
 
-func Updater() {
+func Updater(timezone *time.Location) {
 	cc := NewChannelClient("air_alert_ua")
 	messages, err := cc.FetchLast(200)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Infof("updater: fetched %d last messages", len(messages))
+	log.Infof("updater: fetch %d last messages", len(messages))
 	newestID := messages[len(messages)-1].ID
-	ProcessMessages(messages)
+	ProcessMessages(messages, timezone, false)
 	LastUpdate = time.Now()
 	for {
 		messages, err = cc.FetchNewer(newestID)
 		if err != nil {
 			log.Error(err)
+			<-time.After(10 * time.Second)
 			continue
 		}
 		LastUpdate = time.Now()
 		if len(messages) > 0 {
-			log.Infof("updater: fetched %d new messages", len(messages))
+			log.Infof("updater: fetch %d new messages", len(messages))
 			newestID = messages[len(messages)-1].ID
-			ProcessMessages(messages)
+			ProcessMessages(messages, timezone, true)
 		} else {
 			<-time.After(5 * time.Second)
 		}
 	}
 }
 
-func ProcessMessages(messages []Message) {
+func ProcessMessages(messages []Message, timezone *time.Location, isFresh bool) {
 	for _, msg := range messages {
 		sentence := msg.Text[1]
 		var on bool
@@ -54,13 +55,17 @@ func ProcessMessages(messages []Message) {
 			}
 		}
 		if state == nil {
-			log.Warnf("updater: no known states found in \"%s\"", sentence)
+			if isFresh {
+				log.Warnf("updater: no known states found in \"%s\"", sentence)
+			}
 		} else {
-			log.Infof("%s (%d) -> %v", state.Name, state.ID, on)
-			t := msg.Date
+			t := msg.Date.In(timezone)
 			state.Changed = &t
 			state.Alert = on
-			DefaultTopic.Broadcast(state)
+			if isFresh {
+				log.Infof("%s (%d) -> %v", state.Name, state.ID, on)
+				DefaultTopic.Broadcast(state)
+			}
 		}
 	}
 }

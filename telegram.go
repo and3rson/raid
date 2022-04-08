@@ -26,10 +26,10 @@ type ChannelClient struct {
 }
 
 type Message struct {
-	ID int64
+	ID     int64
 	Author string
-	Text []string
-	Date time.Time
+	Text   []string
+	Date   time.Time
 }
 
 func (m Message) String() string {
@@ -102,7 +102,7 @@ func (c *ChannelClient) FetchMessages(before int64) ([]Message, error) {
 		dateTimeNode := getAttr(dateNode, "datetime")
 		dataPost := getAttr(node, "data-post")
 		parts := strings.Split(dataPost, "/")
-		id, err := strconv.ParseInt(parts[len(parts) - 1], 10, 64)
+		id, err := strconv.ParseInt(parts[len(parts)-1], 10, 64)
 		if err != nil {
 			return nil, err
 		}
@@ -110,7 +110,7 @@ func (c *ChannelClient) FetchMessages(before int64) ([]Message, error) {
 		if err != nil {
 			return nil, err
 		}
-		datetime = datetime.In(Timezone)
+		// datetime = datetime.In(Timezone)
 		messages = append(messages, Message{id, getText(authorNode), getLines(textNode), datetime})
 	}
 	return messages, nil

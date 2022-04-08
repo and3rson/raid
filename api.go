@@ -3,8 +3,6 @@ package main
 import (
 	"encoding/json"
 	"net/http"
-	"os"
-	"strings"
 	"time"
 
 	_ "embed"
@@ -20,7 +18,7 @@ import (
 var indexContent []byte
 
 type StatesResponse struct {
-	States []State `json:"states"`
+	States     []State   `json:"states"`
 	LastUpdate time.Time `json:"last_update"`
 }
 
@@ -28,21 +26,11 @@ type PollResponse struct {
 	State State `json:"state"`
 }
 
-func CreateWebRouter() *mux.Router {
-	var apiKeys []string
+func CreateWebRouter(apiKeys []string) *mux.Router {
 	apiKeysMap := make(map[string]bool)
-	for _, key := range strings.Split(os.Getenv("API_KEYS"), ",") {
-		key = strings.TrimSpace(key)
-		if len(key) == 0 {
-			continue
-		}
-		apiKeys = append(apiKeys, key)
+	for _, key := range apiKeys {
 		apiKeysMap[key] = true
 	}
-	if len(apiKeys) == 0 {
-		log.Fatal("api: no API_KEYS defined in environment")
-	}
-	log.Infof("api: load %d keys from API_KEYS env var", len(apiKeys))
 
 	webMux := mux.NewRouter()
 	apiMux := webMux.PathPrefix("/api").Subrouter()
@@ -124,9 +112,9 @@ func CreateWebRouter() *mux.Router {
 	return webMux
 }
 
-func CreateHTTPServer() *http.Server {
+func CreateHTTPServer(apiKeys []string) *http.Server {
 	return &http.Server{
 		Addr:    "0.0.0.0:10101",
-		Handler: CreateWebRouter(),
+		Handler: CreateWebRouter(apiKeys),
 	}
 }
