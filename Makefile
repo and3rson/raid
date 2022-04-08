@@ -10,6 +10,7 @@ run:
 	go run .
 
 build:
+	go generate .
 	docker build -t $(ECR_URL) .
 
 push: build
