@@ -5,12 +5,13 @@ all: init run
 init:
 	go get
 
-run:
+generate:
 	go generate .
+
+run:
 	go run .
 
 build-docker:
-	go generate .
 	docker build -t $(ECR_URL) .
 
 run-docker: build-docker
