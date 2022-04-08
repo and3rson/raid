@@ -12,9 +12,75 @@
     div.column{display: inline-block; vertical-align: top; width: 50%;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        background-color: #232629;
+        color: #7a7c7d;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #7a7c7d;  padding-left: 4px; }
+    div.sourceCode
+      { color: #cfcfc2; background-color: #232629; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #cfcfc2; } /* Normal */
+    code span.al { color: #95da4c; background-color: #4d1f24; font-weight: bold; } /* Alert */
+    code span.an { color: #3f8058; } /* Annotation */
+    code span.at { color: #2980b9; } /* Attribute */
+    code span.bn { color: #f67400; } /* BaseN */
+    code span.bu { color: #7f8c8d; } /* BuiltIn */
+    code span.cf { color: #fdbc4b; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #3daee9; } /* Char */
+    code span.cn { color: #27aeae; font-weight: bold; } /* Constant */
+    code span.co { color: #7a7c7d; } /* Comment */
+    code span.cv { color: #7f8c8d; } /* CommentVar */
+    code span.do { color: #a43340; } /* Documentation */
+    code span.dt { color: #2980b9; } /* DataType */
+    code span.dv { color: #f67400; } /* DecVal */
+    code span.er { color: #da4453; text-decoration: underline; } /* Error */
+    code span.ex { color: #0099ff; font-weight: bold; } /* Extension */
+    code span.fl { color: #f67400; } /* Float */
+    code span.fu { color: #8e44ad; } /* Function */
+    code span.im { color: #27ae60; } /* Import */
+    code span.in { color: #c45b00; } /* Information */
+    code span.kw { color: #cfcfc2; font-weight: bold; } /* Keyword */
+    code span.op { color: #cfcfc2; } /* Operator */
+    code span.ot { color: #27ae60; } /* Other */
+    code span.pp { color: #27ae60; } /* Preprocessor */
+    code span.re { color: #2980b9; background-color: #153042; } /* RegionMarker */
+    code span.sc { color: #3daee9; } /* SpecialChar */
+    code span.ss { color: #da4453; } /* SpecialString */
+    code span.st { color: #f44f4f; } /* String */
+    code span.va { color: #27aeae; } /* Variable */
+    code span.vs { color: #da4453; } /* VerbatimString */
+    code span.wa { color: #da4453; } /* Warning */
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
-  <link rel="stylesheet" href="data:text/css,body%7B%0Amargin%3A%200%20auto%3B%0Abackground%3A%20%23222222%3B%0Afont%2Dfamily%3A%20Roboto%2C%20sans%2Dserif%3B%0Acolor%3A%20%23EEE%3B%0Aline%2Dheight%3A%201%3B%0Amax%2Dwidth%3A%20960px%3B%0Apadding%3A%2030px%3B%0A%7D%0Ah1%2C%20h2%2C%20h3%2C%20h4%20%7B%0Afont%2Dweight%3A%20400%3B%0A%7D%0Ah1%2C%20h2%2C%20h3%2C%20h4%2C%20h5%2C%20p%20%7B%0Amargin%2Dbottom%3A%2024px%3B%0Apadding%3A%200%3B%0A%7D%0Ah1%20%7B%0Afont%2Dsize%3A%2048px%3B%0A%7D%0Ah2%20%7B%0Afont%2Dsize%3A%2036px%3B%0Amargin%3A%2024px%200%206px%3B%0A%7D%0Ah3%20%7B%0Afont%2Dsize%3A%2024px%3B%0A%7D%0Ah4%20%7B%0Afont%2Dsize%3A%2021px%3B%0A%7D%0Ah5%20%7B%0Afont%2Dsize%3A%2018px%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%2361BFC1%3B%0Amargin%3A%200%3B%0Apadding%3A%200%3B%0Atext%2Ddecoration%3A%20none%3B%0Avertical%2Dalign%3A%20baseline%3B%0A%7D%0Aa%3Ahover%20%7B%0Atext%2Ddecoration%3A%20underline%3B%0A%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23466B6C%3B%0A%7D%0Aul%2C%20ol%20%7B%0Apadding%3A%200%3B%0Amargin%3A%200%3B%0A%7D%0Ali%20%7B%0Aline%2Dheight%3A%2024px%3B%0A%7D%0Ali%20ul%2C%20li%20ul%20%7B%0Amargin%2Dleft%3A%2024px%3B%0A%7D%0Ap%2C%20ul%2C%20ol%20%7B%0Afont%2Dsize%3A%2016px%3B%0Aline%2Dheight%3A%2024px%3B%0A%0A%7D%0Apre%20%7B%0Apadding%3A%200px%2024px%3B%0Amax%2Dwidth%3A%20800px%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%0A%0Aborder%2Dleft%3A%200%2E5rem%20solid%20%23444%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20Andale%20Mono%2C%20monospace%3B%0Aline%2Dheight%3A%201%2E5%3B%0A%0A%7D%0Aaside%20%7B%0Adisplay%3A%20block%3B%0Afloat%3A%20right%3B%0Awidth%3A%20390px%3B%0A%7D%0Ablockquote%20%7B%0Aborder%2Dleft%3A%2E5em%20solid%20%23eee%3B%0Apadding%3A%200%202em%3B%0Amargin%2Dleft%3A0%3B%0A%0A%7D%0Ablockquote%20cite%20%7B%0Afont%2Dsize%3A14px%3B%0Aline%2Dheight%3A20px%3B%0Acolor%3A%23bfbfbf%3B%0A%7D%0Ablockquote%20cite%3Abefore%20%7B%0Acontent%3A%20%27%5C2014%20%5C00A0%27%3B%0A%7D%0Ablockquote%20p%20%7B%20color%3A%20%23666%3B%0A%0A%7D%0Ahr%20%7B%0Awidth%3A%20540px%3B%0Atext%2Dalign%3A%20left%3B%0Amargin%3A%200%20auto%200%200%3B%0Acolor%3A%20%23999%3B%0A%7D%0A%0Abutton%2C%0Ainput%2C%0Aselect%2C%0Atextarea%20%7B%0Afont%2Dsize%3A%20100%25%3B%0Amargin%3A%200%3B%0Avertical%2Dalign%3A%20baseline%3B%0A%2Avertical%2Dalign%3A%20middle%3B%0A%7D%0Abutton%2C%20input%20%7B%0Aline%2Dheight%3A%20normal%3B%0A%2Aoverflow%3A%20visible%3B%0A%7D%0Abutton%3A%3A%2Dmoz%2Dfocus%2Dinner%2C%20input%3A%3A%2Dmoz%2Dfocus%2Dinner%20%7B%0Aborder%3A%200%3B%0Apadding%3A%200%3B%0A%7D%0Abutton%2C%0Ainput%5Btype%3D%22button%22%5D%2C%0Ainput%5Btype%3D%22reset%22%5D%2C%0Ainput%5Btype%3D%22submit%22%5D%20%7B%0Acursor%3A%20pointer%3B%0A%2Dwebkit%2Dappearance%3A%20button%3B%0A%7D%0Ainput%5Btype%3Dcheckbox%5D%2C%20input%5Btype%3Dradio%5D%20%7B%0Acursor%3A%20pointer%3B%0A%7D%0A%0Ainput%3Anot%28%5Btype%3D%22image%22%5D%29%2C%20textarea%20%7B%0A%2Dwebkit%2Dbox%2Dsizing%3A%20content%2Dbox%3B%0A%2Dmoz%2Dbox%2Dsizing%3A%20content%2Dbox%3B%0Abox%2Dsizing%3A%20content%2Dbox%3B%0A%7D%0Ainput%5Btype%3D%22search%22%5D%20%7B%0A%2Dwebkit%2Dappearance%3A%20textfield%3B%0A%2Dwebkit%2Dbox%2Dsizing%3A%20content%2Dbox%3B%0A%2Dmoz%2Dbox%2Dsizing%3A%20content%2Dbox%3B%0Abox%2Dsizing%3A%20content%2Dbox%3B%0A%7D%0Ainput%5Btype%3D%22search%22%5D%3A%3A%2Dwebkit%2Dsearch%2Ddecoration%20%7B%0A%2Dwebkit%2Dappearance%3A%20none%3B%0A%7D%0Alabel%2C%0Ainput%2C%0Aselect%2C%0Atextarea%20%7B%0Afont%2Dfamily%3A%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2013px%3B%0Afont%2Dweight%3A%20normal%3B%0Aline%2Dheight%3A%20normal%3B%0Amargin%2Dbottom%3A%2018px%3B%0A%7D%0Ainput%5Btype%3Dcheckbox%5D%2C%20input%5Btype%3Dradio%5D%20%7B%0Acursor%3A%20pointer%3B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Ainput%5Btype%3Dtext%5D%2C%0Ainput%5Btype%3Dpassword%5D%2C%0Atextarea%2C%0Aselect%20%7B%0Adisplay%3A%20inline%2Dblock%3B%0Awidth%3A%20210px%3B%0Apadding%3A%204px%3B%0Afont%2Dsize%3A%2013px%3B%0Afont%2Dweight%3A%20normal%3B%0Aline%2Dheight%3A%2018px%3B%0Aheight%3A%2018px%3B%0Acolor%3A%20%23808080%3B%0Aborder%3A%201px%20solid%20%23ccc%3B%0A%2Dwebkit%2Dborder%2Dradius%3A%203px%3B%0A%2Dmoz%2Dborder%2Dradius%3A%203px%3B%0Aborder%2Dradius%3A%203px%3B%0A%7D%0Aselect%2C%20input%5Btype%3Dfile%5D%20%7B%0Aheight%3A%2027px%3B%0Aline%2Dheight%3A%2027px%3B%0A%7D%0Atextarea%20%7B%0Aheight%3A%20auto%3B%0A%7D%0A%0A%3A%2Dmoz%2Dplaceholder%20%7B%0Acolor%3A%20%23bfbfbf%3B%0A%7D%0A%3A%3A%2Dwebkit%2Dinput%2Dplaceholder%20%7B%0Acolor%3A%20%23bfbfbf%3B%0A%7D%0Ainput%5Btype%3Dtext%5D%2C%0Ainput%5Btype%3Dpassword%5D%2C%0Aselect%2C%0Atextarea%20%7B%0A%2Dwebkit%2Dtransition%3A%20border%20linear%200%2E2s%2C%20box%2Dshadow%20linear%200%2E2s%3B%0A%2Dmoz%2Dtransition%3A%20border%20linear%200%2E2s%2C%20box%2Dshadow%20linear%200%2E2s%3B%0Atransition%3A%20border%20linear%200%2E2s%2C%20box%2Dshadow%20linear%200%2E2s%3B%0A%2Dwebkit%2Dbox%2Dshadow%3A%20inset%200%201px%203px%20rgba%280%2C%200%2C%200%2C%200%2E1%29%3B%0A%2Dmoz%2Dbox%2Dshadow%3A%20inset%200%201px%203px%20rgba%280%2C%200%2C%200%2C%200%2E1%29%3B%0Abox%2Dshadow%3A%20inset%200%201px%203px%20rgba%280%2C%200%2C%200%2C%200%2E1%29%3B%0A%7D%0Ainput%5Btype%3Dtext%5D%3Afocus%2C%20input%5Btype%3Dpassword%5D%3Afocus%2C%20textarea%3Afocus%20%7B%0Aoutline%3A%20none%3B%0Aborder%2Dcolor%3A%20rgba%2882%2C%20168%2C%20236%2C%200%2E8%29%3B%0A%2Dwebkit%2Dbox%2Dshadow%3A%20inset%200%201px%203px%20rgba%280%2C%200%2C%200%2C%200%2E1%29%2C%200%200%208px%20rgba%2882%2C%20168%2C%20236%2C%200%2E6%29%3B%0A%2Dmoz%2Dbox%2Dshadow%3A%20inset%200%201px%203px%20rgba%280%2C%200%2C%200%2C%200%2E1%29%2C%200%200%208px%20rgba%2882%2C%20168%2C%20236%2C%200%2E6%29%3B%0Abox%2Dshadow%3A%20inset%200%201px%203px%20rgba%280%2C%200%2C%200%2C%200%2E1%29%2C%200%200%208px%20rgba%2882%2C%20168%2C%20236%2C%200%2E6%29%3B%0A%7D%0A%0Abutton%20%7B%0Adisplay%3A%20inline%2Dblock%3B%0Apadding%3A%204px%2014px%3B%0Afont%2Dfamily%3A%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%2018px%3B%0A%2Dwebkit%2Dborder%2Dradius%3A%204px%3B%0A%2Dmoz%2Dborder%2Dradius%3A%204px%3B%0Aborder%2Dradius%3A%204px%3B%0A%2Dwebkit%2Dbox%2Dshadow%3A%20inset%200%201px%200%20rgba%28255%2C%20255%2C%20255%2C%200%2E2%29%2C%200%201px%202px%20rgba%280%2C%200%2C%200%2C%200%2E05%29%3B%0A%2Dmoz%2Dbox%2Dshadow%3A%20inset%200%201px%200%20rgba%28255%2C%20255%2C%20255%2C%200%2E2%29%2C%200%201px%202px%20rgba%280%2C%200%2C%200%2C%200%2E05%29%3B%0Abox%2Dshadow%3A%20inset%200%201px%200%20rgba%28255%2C%20255%2C%20255%2C%200%2E2%29%2C%200%201px%202px%20rgba%280%2C%200%2C%200%2C%200%2E05%29%3B%0Abackground%2Dcolor%3A%20%230064cd%3B%0Abackground%2Drepeat%3A%20repeat%2Dx%3B%0Abackground%2Dimage%3A%20%2Dkhtml%2Dgradient%28linear%2C%20left%20top%2C%20left%20bottom%2C%20from%28%23049cdb%29%2C%20to%28%230064cd%29%29%3B%0Abackground%2Dimage%3A%20%2Dmoz%2Dlinear%2Dgradient%28top%2C%20%23049cdb%2C%20%230064cd%29%3B%0Abackground%2Dimage%3A%20%2Dms%2Dlinear%2Dgradient%28top%2C%20%23049cdb%2C%20%230064cd%29%3B%0Abackground%2Dimage%3A%20%2Dwebkit%2Dgradient%28linear%2C%20left%20top%2C%20left%20bottom%2C%20color%2Dstop%280%25%2C%20%23049cdb%29%2C%20color%2Dstop%28100%25%2C%20%230064cd%29%29%3B%0Abackground%2Dimage%3A%20%2Dwebkit%2Dlinear%2Dgradient%28top%2C%20%23049cdb%2C%20%230064cd%29%3B%0Abackground%2Dimage%3A%20%2Do%2Dlinear%2Dgradient%28top%2C%20%23049cdb%2C%20%230064cd%29%3B%0Abackground%2Dimage%3A%20linear%2Dgradient%28top%2C%20%23049cdb%2C%20%230064cd%29%3B%0Acolor%3A%20%23fff%3B%0Atext%2Dshadow%3A%200%20%2D1px%200%20rgba%280%2C%200%2C%200%2C%200%2E25%29%3B%0Aborder%3A%201px%20solid%20%23004b9a%3B%0Aborder%2Dbottom%2Dcolor%3A%20%23003f81%3B%0A%2Dwebkit%2Dtransition%3A%200%2E1s%20linear%20all%3B%0A%2Dmoz%2Dtransition%3A%200%2E1s%20linear%20all%3B%0Atransition%3A%200%2E1s%20linear%20all%3B%0Aborder%2Dcolor%3A%20%230064cd%20%230064cd%20%23003f81%3B%0Aborder%2Dcolor%3A%20rgba%280%2C%200%2C%200%2C%200%2E1%29%20rgba%280%2C%200%2C%200%2C%200%2E1%29%20rgba%280%2C%200%2C%200%2C%200%2E25%29%3B%0A%7D%0Abutton%3Ahover%20%7B%0Acolor%3A%20%23fff%3B%0Abackground%2Dposition%3A%200%20%2D15px%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Abutton%3Aactive%20%7B%0A%2Dwebkit%2Dbox%2Dshadow%3A%20inset%200%203px%207px%20rgba%280%2C%200%2C%200%2C%200%2E15%29%2C%200%201px%202px%20rgba%280%2C%200%2C%200%2C%200%2E05%29%3B%0A%2Dmoz%2Dbox%2Dshadow%3A%20inset%200%203px%207px%20rgba%280%2C%200%2C%200%2C%200%2E15%29%2C%200%201px%202px%20rgba%280%2C%200%2C%200%2C%200%2E05%29%3B%0Abox%2Dshadow%3A%20inset%200%203px%207px%20rgba%280%2C%200%2C%200%2C%200%2E15%29%2C%200%201px%202px%20rgba%280%2C%200%2C%200%2C%200%2E05%29%3B%0A%7D%0Abutton%3A%3A%2Dmoz%2Dfocus%2Dinner%20%7B%0Apadding%3A%200%3B%0Aborder%3A%200%3B%0A%7D%0A" />
+  <link rel="stylesheet" href="data:text/css,body%7B%0Amargin%3A%200%20auto%3B%0Abackground%3A%20%23222222%3B%0Afont%2Dfamily%3A%20Roboto%2C%20sans%2Dserif%3B%0Acolor%3A%20%23EEE%3B%0Aline%2Dheight%3A%201%3B%0Amax%2Dwidth%3A%201024px%3B%0Apadding%3A%2030px%3B%0A%7D%0Abody%3A%3Aafter%20%7B%0Acontent%3A%20%27%27%3B%0Aposition%3A%20absolute%3B%0Aleft%3A%200%3B%0Aright%3A%200%3B%0Atop%3A%200%3B%0Aheight%3A%2016px%3B%0A%0A%0Abackground%2Dimage%3A%20url%28data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAIAAAABACAIAAABdtOgoAAABhWlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AcxV%2FTSotUHMwg4hCwOlkQFRFctApFqBBqhVYdzEe%2FoElDkuLiKLgWHPxYrDq4OOvq4CoIgh8gjk5Oii5S4v%2BSQosYD4778e7e4%2B4dwDUqimaFxgBNt810MiFkc6tC%2BBUhRMBjCDOSYhlzopiC7%2Fi6R4Ctd3GW5X%2Fuz9Gj5i0FCAjEs4ph2sQbxFObtsF4n5hXSpJKfE48atIFiR%2BZLnv8xrjoMscyeTOTnifmiYViB8sdrJRMjXiSOKZqOuVzWY9VxluMtUpNad2TvTCa11eWmU5zEEksYgkiBMiooYwKbMRp1UmxkKb9hI9%2FwPWL5JLJVYZCjgVUoUFy%2FWB%2F8LtbqzAx7iVFE0DXi%2BN8DAPhXaBZd5zvY8dpngDBZ%2BBKb%2FurDWD6k%2FR6W4sdAb3bwMV1W5P3gMsdoP%2FJkEzJlYI0uUIBeD%2Bjb8oBfbdA95rXW2sfpw9AhrpK3QAHh8BIkbLXfd4d6ezt3zOt%2Fn4AqZlyvUEogAUAAAAJcEhZcwAALiMAAC4jAXilP3YAAAAHdElNRQfmBAgUJiGoZUTGAAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAAQtJREFUeNrt0UkBgwAQxdAPJxTVWHWALxz1WBmZJZHwcqRtV%2FIknzTuTQ71Qf1v0wFj9JOc6lP6v44Dhuk3GzBPv9OAkfptBkzV7zFgsH6DAbP1qw8Yr196wAb9ugOW6BcdsEe%2F4oBV%2BuUGbNOvNWChfqEBO%2FWrDFirX2LAZn1%2BwHJ9eID65AD1yQHqkwPUJweoTw5QnxygPjlAfXKA%2BuQA9ckB6pMD1CcHqE8OUJ8coD45QH1ygPrkAPXJAeqTA9QnB6hPDlCfHKA%2BOUB9coD65AD1yQHqkwPUJweoTw5QnxygPjlAfXKA%2BuQA9ckB6pMD1CcHqE8OUJ8coD45QH1ygPrkAPXhAbf6aH84ab0aLF0liwAAAABJRU5ErkJggg%3D%3D%29%3B%0A%7D%0Ah1%2C%20h2%2C%20h3%2C%20h4%20%7B%0Afont%2Dweight%3A%20400%3B%0A%7D%0Ah1%2C%20h2%2C%20h3%2C%20h4%2C%20h5%2C%20p%20%7B%0Amargin%2Dbottom%3A%2024px%3B%0Apadding%3A%200%3B%0A%7D%0Ah1%20%7B%0Afont%2Dsize%3A%2048px%3B%0A%7D%0Ah2%20%7B%0Afont%2Dsize%3A%2036px%3B%0Amargin%3A%2024px%200%206px%3B%0A%7D%0Ah3%20%7B%0Afont%2Dsize%3A%2024px%3B%0A%7D%0Ah4%20%7B%0Afont%2Dsize%3A%2021px%3B%0A%7D%0Ah5%20%7B%0Afont%2Dsize%3A%2018px%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%23CC4040%3B%0Amargin%3A%200%3B%0Apadding%3A%200%3B%0Atext%2Ddecoration%3A%20none%3B%0Avertical%2Dalign%3A%20baseline%3B%0A%7D%0Aa%3Ahover%20%7B%0Atext%2Ddecoration%3A%20underline%3B%0A%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23CC4040%3B%0A%7D%0Aul%2C%20ol%20%7B%0Apadding%3A%200%3B%0Amargin%3A%200%200%200%2024px%3B%0A%7D%0Ali%20%7B%0Aline%2Dheight%3A%2024px%3B%0A%7D%0Ali%20ul%2C%20li%20ul%20%7B%0Amargin%2Dleft%3A%2024px%3B%0A%7D%0Ap%2C%20ul%2C%20ol%20%7B%0Afont%2Dsize%3A%2016px%3B%0Aline%2Dheight%3A%2024px%3B%0A%0A%7D%0Apre%20%7B%0A%0Apadding%3A%208px%3B%0Amax%2Dwidth%3A%201024px%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%0A%0Aborder%2Dleft%3A%204px%20solid%20%23444%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20Andale%20Mono%2C%20monospace%3B%0Aline%2Dheight%3A%201%2E5%3B%0A%0A%7D%0Aaside%20%7B%0Adisplay%3A%20block%3B%0Afloat%3A%20right%3B%0Awidth%3A%20390px%3B%0A%7D%0Ablockquote%20%7B%0Aborder%2Dleft%3A%2E25em%20solid%20%23555%3B%0Apadding%3A%200%201em%3B%0Amargin%2Dleft%3A0%3B%0A%0A%7D%0Ablockquote%20cite%20%7B%0Afont%2Dsize%3A14px%3B%0Aline%2Dheight%3A20px%3B%0Acolor%3A%20%23aaaaaa%3B%0A%7D%0Ablockquote%20cite%3Abefore%20%7B%0Acontent%3A%20%27%5C2014%20%5C00A0%27%3B%0A%7D%0Ablockquote%20p%20%7B%20color%3A%20%23aaaaaa%3B%0A%0A%7D%0Ahr%20%7B%0Awidth%3A%20540px%3B%0Atext%2Dalign%3A%20left%3B%0Amargin%3A%200%20auto%200%200%3B%0Acolor%3A%20%23999%3B%0A%7D%0A%0Abutton%2C%0Ainput%2C%0Aselect%2C%0Atextarea%20%7B%0Afont%2Dsize%3A%20100%25%3B%0Amargin%3A%200%3B%0Avertical%2Dalign%3A%20baseline%3B%0A%2Avertical%2Dalign%3A%20middle%3B%0A%7D%0Abutton%2C%20input%20%7B%0Aline%2Dheight%3A%20normal%3B%0A%2Aoverflow%3A%20visible%3B%0A%7D%0Abutton%3A%3A%2Dmoz%2Dfocus%2Dinner%2C%20input%3A%3A%2Dmoz%2Dfocus%2Dinner%20%7B%0Aborder%3A%200%3B%0Apadding%3A%200%3B%0A%7D%0Abutton%2C%0Ainput%5Btype%3D%22button%22%5D%2C%0Ainput%5Btype%3D%22reset%22%5D%2C%0Ainput%5Btype%3D%22submit%22%5D%20%7B%0Acursor%3A%20pointer%3B%0A%2Dwebkit%2Dappearance%3A%20button%3B%0A%7D%0Ainput%5Btype%3Dcheckbox%5D%2C%20input%5Btype%3Dradio%5D%20%7B%0Acursor%3A%20pointer%3B%0A%7D%0A%0Ainput%3Anot%28%5Btype%3D%22image%22%5D%29%2C%20textarea%20%7B%0A%2Dwebkit%2Dbox%2Dsizing%3A%20content%2Dbox%3B%0A%2Dmoz%2Dbox%2Dsizing%3A%20content%2Dbox%3B%0Abox%2Dsizing%3A%20content%2Dbox%3B%0A%7D%0Ainput%5Btype%3D%22search%22%5D%20%7B%0A%2Dwebkit%2Dappearance%3A%20textfield%3B%0A%2Dwebkit%2Dbox%2Dsizing%3A%20content%2Dbox%3B%0A%2Dmoz%2Dbox%2Dsizing%3A%20content%2Dbox%3B%0Abox%2Dsizing%3A%20content%2Dbox%3B%0A%7D%0Ainput%5Btype%3D%22search%22%5D%3A%3A%2Dwebkit%2Dsearch%2Ddecoration%20%7B%0A%2Dwebkit%2Dappearance%3A%20none%3B%0A%7D%0Alabel%2C%0Ainput%2C%0Aselect%2C%0Atextarea%20%7B%0Afont%2Dfamily%3A%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2013px%3B%0Afont%2Dweight%3A%20normal%3B%0Aline%2Dheight%3A%20normal%3B%0Amargin%2Dbottom%3A%2018px%3B%0A%7D%0Ainput%5Btype%3Dcheckbox%5D%2C%20input%5Btype%3Dradio%5D%20%7B%0Acursor%3A%20pointer%3B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Ainput%5Btype%3Dtext%5D%2C%0Ainput%5Btype%3Dpassword%5D%2C%0Atextarea%2C%0Aselect%20%7B%0Adisplay%3A%20inline%2Dblock%3B%0Awidth%3A%20210px%3B%0Apadding%3A%204px%3B%0Afont%2Dsize%3A%2013px%3B%0Afont%2Dweight%3A%20normal%3B%0Aline%2Dheight%3A%2018px%3B%0Aheight%3A%2018px%3B%0Acolor%3A%20%23808080%3B%0Aborder%3A%201px%20solid%20%23ccc%3B%0A%2Dwebkit%2Dborder%2Dradius%3A%203px%3B%0A%2Dmoz%2Dborder%2Dradius%3A%203px%3B%0Aborder%2Dradius%3A%203px%3B%0A%7D%0Aselect%2C%20input%5Btype%3Dfile%5D%20%7B%0Aheight%3A%2027px%3B%0Aline%2Dheight%3A%2027px%3B%0A%7D%0Atextarea%20%7B%0Aheight%3A%20auto%3B%0A%7D%0A%0A%3A%2Dmoz%2Dplaceholder%20%7B%0Acolor%3A%20%23bfbfbf%3B%0A%7D%0A%3A%3A%2Dwebkit%2Dinput%2Dplaceholder%20%7B%0Acolor%3A%20%23bfbfbf%3B%0A%7D%0Ainput%5Btype%3Dtext%5D%2C%0Ainput%5Btype%3Dpassword%5D%2C%0Aselect%2C%0Atextarea%20%7B%0A%2Dwebkit%2Dtransition%3A%20border%20linear%200%2E2s%2C%20box%2Dshadow%20linear%200%2E2s%3B%0A%2Dmoz%2Dtransition%3A%20border%20linear%200%2E2s%2C%20box%2Dshadow%20linear%200%2E2s%3B%0Atransition%3A%20border%20linear%200%2E2s%2C%20box%2Dshadow%20linear%200%2E2s%3B%0A%2Dwebkit%2Dbox%2Dshadow%3A%20inset%200%201px%203px%20rgba%280%2C%200%2C%200%2C%200%2E1%29%3B%0A%2Dmoz%2Dbox%2Dshadow%3A%20inset%200%201px%203px%20rgba%280%2C%200%2C%200%2C%200%2E1%29%3B%0Abox%2Dshadow%3A%20inset%200%201px%203px%20rgba%280%2C%200%2C%200%2C%200%2E1%29%3B%0A%7D%0Ainput%5Btype%3Dtext%5D%3Afocus%2C%20input%5Btype%3Dpassword%5D%3Afocus%2C%20textarea%3Afocus%20%7B%0Aoutline%3A%20none%3B%0Aborder%2Dcolor%3A%20rgba%2882%2C%20168%2C%20236%2C%200%2E8%29%3B%0A%2Dwebkit%2Dbox%2Dshadow%3A%20inset%200%201px%203px%20rgba%280%2C%200%2C%200%2C%200%2E1%29%2C%200%200%208px%20rgba%2882%2C%20168%2C%20236%2C%200%2E6%29%3B%0A%2Dmoz%2Dbox%2Dshadow%3A%20inset%200%201px%203px%20rgba%280%2C%200%2C%200%2C%200%2E1%29%2C%200%200%208px%20rgba%2882%2C%20168%2C%20236%2C%200%2E6%29%3B%0Abox%2Dshadow%3A%20inset%200%201px%203px%20rgba%280%2C%200%2C%200%2C%200%2E1%29%2C%200%200%208px%20rgba%2882%2C%20168%2C%20236%2C%200%2E6%29%3B%0A%7D%0A%0Abutton%20%7B%0Adisplay%3A%20inline%2Dblock%3B%0Apadding%3A%204px%2014px%3B%0Afont%2Dfamily%3A%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%2018px%3B%0A%2Dwebkit%2Dborder%2Dradius%3A%204px%3B%0A%2Dmoz%2Dborder%2Dradius%3A%204px%3B%0Aborder%2Dradius%3A%204px%3B%0A%2Dwebkit%2Dbox%2Dshadow%3A%20inset%200%201px%200%20rgba%28255%2C%20255%2C%20255%2C%200%2E2%29%2C%200%201px%202px%20rgba%280%2C%200%2C%200%2C%200%2E05%29%3B%0A%2Dmoz%2Dbox%2Dshadow%3A%20inset%200%201px%200%20rgba%28255%2C%20255%2C%20255%2C%200%2E2%29%2C%200%201px%202px%20rgba%280%2C%200%2C%200%2C%200%2E05%29%3B%0Abox%2Dshadow%3A%20inset%200%201px%200%20rgba%28255%2C%20255%2C%20255%2C%200%2E2%29%2C%200%201px%202px%20rgba%280%2C%200%2C%200%2C%200%2E05%29%3B%0Abackground%2Dcolor%3A%20%230064cd%3B%0Abackground%2Drepeat%3A%20repeat%2Dx%3B%0Abackground%2Dimage%3A%20%2Dkhtml%2Dgradient%28linear%2C%20left%20top%2C%20left%20bottom%2C%20from%28%23049cdb%29%2C%20to%28%230064cd%29%29%3B%0Abackground%2Dimage%3A%20%2Dmoz%2Dlinear%2Dgradient%28top%2C%20%23049cdb%2C%20%230064cd%29%3B%0Abackground%2Dimage%3A%20%2Dms%2Dlinear%2Dgradient%28top%2C%20%23049cdb%2C%20%230064cd%29%3B%0Abackground%2Dimage%3A%20%2Dwebkit%2Dgradient%28linear%2C%20left%20top%2C%20left%20bottom%2C%20color%2Dstop%280%25%2C%20%23049cdb%29%2C%20color%2Dstop%28100%25%2C%20%230064cd%29%29%3B%0Abackground%2Dimage%3A%20%2Dwebkit%2Dlinear%2Dgradient%28top%2C%20%23049cdb%2C%20%230064cd%29%3B%0Abackground%2Dimage%3A%20%2Do%2Dlinear%2Dgradient%28top%2C%20%23049cdb%2C%20%230064cd%29%3B%0Abackground%2Dimage%3A%20linear%2Dgradient%28top%2C%20%23049cdb%2C%20%230064cd%29%3B%0Acolor%3A%20%23fff%3B%0Atext%2Dshadow%3A%200%20%2D1px%200%20rgba%280%2C%200%2C%200%2C%200%2E25%29%3B%0Aborder%3A%201px%20solid%20%23004b9a%3B%0Aborder%2Dbottom%2Dcolor%3A%20%23003f81%3B%0A%2Dwebkit%2Dtransition%3A%200%2E1s%20linear%20all%3B%0A%2Dmoz%2Dtransition%3A%200%2E1s%20linear%20all%3B%0Atransition%3A%200%2E1s%20linear%20all%3B%0Aborder%2Dcolor%3A%20%230064cd%20%230064cd%20%23003f81%3B%0Aborder%2Dcolor%3A%20rgba%280%2C%200%2C%200%2C%200%2E1%29%20rgba%280%2C%200%2C%200%2C%200%2E1%29%20rgba%280%2C%200%2C%200%2C%200%2E25%29%3B%0A%7D%0Abutton%3Ahover%20%7B%0Acolor%3A%20%23fff%3B%0Abackground%2Dposition%3A%200%20%2D15px%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Abutton%3Aactive%20%7B%0A%2Dwebkit%2Dbox%2Dshadow%3A%20inset%200%203px%207px%20rgba%280%2C%200%2C%200%2C%200%2E15%29%2C%200%201px%202px%20rgba%280%2C%200%2C%200%2C%200%2E05%29%3B%0A%2Dmoz%2Dbox%2Dshadow%3A%20inset%200%203px%207px%20rgba%280%2C%200%2C%200%2C%200%2E15%29%2C%200%201px%202px%20rgba%280%2C%200%2C%200%2C%200%2E05%29%3B%0Abox%2Dshadow%3A%20inset%200%203px%207px%20rgba%280%2C%200%2C%200%2C%200%2E15%29%2C%200%201px%202px%20rgba%280%2C%200%2C%200%2C%200%2E05%29%3B%0A%7D%0Abutton%3A%3A%2Dmoz%2Dfocus%2Dinner%20%7B%0Apadding%3A%200%3B%0Aborder%3A%200%3B%0A%7D%0A" />
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
@@ -23,51 +89,62 @@
 <header id="title-block-header">
 <h1 class="title">Air Raid Alert API (Ukraine)</h1>
 </header>
-<p>This API allows you to query &amp; listen to air raid alerts in Ukraine.</p>
-<p>Data is taken from <a href="https://telegram.me/air_alert_ua" class="uri">https://telegram.me/air_alert_ua</a> via HTTP API.</p>
-<p>Events are usually delayed for up to 5 seconds.</p>
-<p>Only states are supported at this moment - 24 total plus Kyiv city. Crimea is absent from this list since no information is available. But we all know that Crimea is Ukraine.</p>
-<h2 id="authentication">Authentication</h2>
-<p>You will need a key to use this API.</p>
+<p>Цей API дозволяє вам отримувати інформацію про повітряні тривоги в Україні в режимі реального часу. This API allows you to query &amp; listen to air raid alerts in Ukraine.</p>
+<p>Дані беремо з <a href="https://telegram.me/air_alert_ua" class="uri">https://telegram.me/air_alert_ua</a> по HTTP API.</p>
+<p>Події можу затримуватись до 5 секунд.</p>
+<p>Зараз надаємо інформацію лише про області (24 області та м. Київ). Крим відсутній зі списку, оскільки по ньому відсутня інформація. Але ми всі знаємо, що Крим - це Україна.</p>
+<h2 id="автентифікація">Автентифікація</h2>
+<p>Вам потрібно ключ для роботи з цим API.</p>
 <ul>
-<li>To request a key, please send me an email (<a href="mailto:a@dun.ai" class="email">a@dun.ai</a>) or ping me in Telegram (<a href="https://t.me/andunai">@andunai</a>).</li>
-<li>Include the key with every request in <code>X-API-Key</code> header.</li>
+<li>Щоб отримати ключ, надішліть мені e-mail (<a href="mailto:a@dun.ai" class="email">a@dun.ai</a>) або повідомлення в Telegram (<a href="https://t.me/andunai">@andunai</a>).</li>
+<li>Надсилайте ключ в кожному запиті в заголовку <code>X-API-Key</code>.</li>
 </ul>
-<p>Please be aware that this API is rate-limited. If you spam more than 10 RPS, you will be throttled.</p>
-<h2 id="endpoints">Endpoints</h2>
+<p>Зверніть увагу: це API має обмеження по частоті запитів. Якщо ви будете спамити зі швидкістю більше ніж 10 запитів на секунду, ви отримаєте HTTP 429.</p>
+<h2 id="ендпоінти">Ендпоінти</h2>
 <h3 id="apistates"><code>/api/states</code></h3>
-<p>Returns the list of states with their statuses.</p>
-<p>Example response:</p>
-<pre><code>{
-  &quot;states&quot;: [
-    {
-      &quot;id&quot;: 1,
-      &quot;name&quot;: &quot;Вінницька область&quot;,
-      &quot;alert&quot;: false,
-      &quot;changed&quot;: &quot;2022-04-05T06:12:52+03:00&quot;
-    },
-    {
-      &quot;id&quot;:2,
-      &quot;name&quot;: &quot;Волинська область&quot;,
-      &quot;alert&quot;: false,
-      &quot;changed&quot;: &quot;2022-04-05T06:13:06+03:00&quot;
-    },
-    // ...
-  ]
-}</code></pre>
+<p>Повертає список областей з їхніми статусами.</p>
+<p>Приклад відповіді:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;states&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Вінницька область&quot;</span><span class="fu">,</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;alert&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;changed&quot;</span><span class="fu">:</span> <span class="st">&quot;2022-04-05T06:12:52+03:00&quot;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Волинська область&quot;</span><span class="fu">,</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;alert&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;changed&quot;</span><span class="fu">:</span> <span class="st">&quot;2022-04-05T06:13:06+03:00&quot;</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="er">...</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <h3 id="apistateslive"><code>/api/states/live</code></h3>
-<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">SSE</a> endpoint which yields alert events in real time.</p>
-<p>Example events:</p>
-<pre><code>event: hello
-data: null
-
-event: ping
-data: null
-
-event: update
-data: {&quot;state&quot;:{&quot;id&quot;:12,&quot;name&quot;:&quot;Львівська область&quot;,&quot;alert&quot;:false,&quot;changed&quot;:&quot;2022-04-05T06:14:56+03:00&quot;}}</code></pre>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">SSE</a>-ендпоінт, який генерує події в режимі реального часу.</p>
+<p>Приклади подій:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">event</span><span class="kw">:</span><span class="at"> hello</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span><span class="kw">:</span><span class="at"> </span><span class="ch">null</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">event</span><span class="kw">:</span><span class="at"> ping</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span><span class="kw">:</span><span class="at"> </span><span class="ch">null</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">event</span><span class="kw">:</span><span class="at"> update</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="st">&quot;state&quot;</span><span class="at">:{</span><span class="st">&quot;id&quot;</span><span class="at">:12</span><span class="kw">,</span><span class="st">&quot;name&quot;</span><span class="at">:</span><span class="st">&quot;Львівська область&quot;</span><span class="kw">,</span><span class="st">&quot;alert&quot;</span><span class="at">:false</span><span class="kw">,</span><span class="st">&quot;changed&quot;</span><span class="at">:</span><span class="st">&quot;2022-04-05T06:14:56+03:00&quot;</span><span class="kw">}</span><span class="at">}</span></span></code></pre></div>
 <h2 id="use-the-source-luke">Use the source, Luke</h2>
-<p>Made by <a href="https://github.com/and3rson">Andrew Dunai</a>.</p>
-<p>Source code for this service can be found here: <a href="https://github.com/and3rson/raid" class="uri">https://github.com/and3rson/raid</a></p>
+<p>Цю штуку зробив <a href="https://dun.ai">Andrew Dunai</a>.</p>
+<p>Початковий код знаходиться тут: <a href="https://github.com/and3rson/raid" class="uri">https://github.com/and3rson/raid</a></p>
+<h2 id="але-навіщо">Але навіщо?</h2>
+<p>Я є прихильником відкритих даних та вільного програмного забезпечення.</p>
+<p>Я вважаю, що будь-яку <strong>інформацію, яка є відкритою,</strong> будь-хто повинен мати змогу <strong>опрацьовувати так, як йому заманеться</strong>.</p>
+<blockquote>
+<p>“<em>Але ж… Хіба ”безкоштовний” і ”вільний” - не те саме?</em>”</p>
+</blockquote>
+<p>“Безкоштовний” (<em>“gratis”</em>) не є синонімом для “вільний” (<em>“libre”</em>).</p>
+<p>Для прикладу, Інстаграм - безкоштовний, але він не є вільний: вони змушують вас використовувати саме їх власний додаток і не дають повного контролю над своїми даними та доступом до них. Точніше, дають, але дуже обмежений доступ. Це і означає термін “невільний” в контексті комп’ютерних технологій.</p>
+<p>Не ставайте рабами постачальників.</p>
+<p>Давайте зробимо світ вільнішим.</p>
+<p>*stallman.jpg*</p>
 </body>
 </html>

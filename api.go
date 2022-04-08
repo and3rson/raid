@@ -13,7 +13,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//go:generate pandoc -f markdown -s assets/index.md -c assets/style.css --metadata "title=Air Raid Alert API (Ukraine)" --self-contained -o assets/index.html
+//go:generate pandoc -f markdown -s assets/index.md -c assets/style.css --metadata "title=Air Raid Alert API (Ukraine)" --self-contained --highlight-style breezedark -o assets/index.html
 //go:embed assets/index.html
 var indexContent []byte
 

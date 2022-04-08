@@ -1,29 +1,30 @@
+Цей API дозволяє вам отримувати інформацію про повітряні тривоги в Україні в режимі реального часу.
 This API allows you to query & listen to air raid alerts in Ukraine.
 
-Data is taken from <https://telegram.me/air_alert_ua> via HTTP API.
+Дані беремо з <https://telegram.me/air_alert_ua> по HTTP API.
 
-Events are usually delayed for up to 5 seconds.
+Події можу затримуватись до 5 секунд.
 
-Only states are supported at this moment - 24 total plus Kyiv city. Crimea is absent from this list since no information is available. But we all know that Crimea is Ukraine.
+Зараз надаємо інформацію лише про області (24 області та м. Київ). Крим відсутній зі списку, оскільки по ньому відсутня інформація. Але ми всі знаємо, що Крим - це Україна.
 
-## Authentication
+## Автентифікація
 
-You will need a key to use this API.
+Вам потрібно ключ для роботи з цим API.
 
-  - To request a key, please send me an email (<a@dun.ai>) or ping me in Telegram ([\@andunai](https://t.me/andunai)).
-  - Include the key with every request in `X-API-Key` header.
+  - Щоб отримати ключ, надішліть мені e-mail (<a@dun.ai>) або повідомлення в Telegram ([\@andunai](https://t.me/andunai)).
+  - Надсилайте ключ в кожному запиті в заголовку `X-API-Key`.
 
-Please be aware that this API is rate-limited. If you spam more than 10 RPS, you will be throttled.
+Зверніть увагу: це API має обмеження по частоті запитів. Якщо ви будете спамити зі швидкістю більше ніж 10 запитів на секунду, ви отримаєте HTTP 429.
 
-## Endpoints
+## Ендпоінти
 
 ### `/api/states`
 
-Returns the list of states with their statuses.
+Повертає список областей з їхніми статусами.
 
-Example response:
+Приклад відповіді:
 
-```
+```json
 {
   "states": [
 	{
@@ -33,7 +34,7 @@ Example response:
 	  "changed": "2022-04-05T06:12:52+03:00"
 	},
 	{
-	  "id":2,
+	  "id": 2,
 	  "name": "Волинська область",
 	  "alert": false,
 	  "changed": "2022-04-05T06:13:06+03:00"
@@ -45,11 +46,11 @@ Example response:
 
 ### `/api/states/live`
 
-[SSE](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) endpoint which yields alert events in real time.
+[SSE](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)-ендпоінт, який генерує події в режимі реального часу.
 
-Example events:
+Приклади подій:
 
-```
+```yaml
 event: hello
 data: null
 
@@ -60,8 +61,30 @@ event: update
 data: {"state":{"id":12,"name":"Львівська область","alert":false,"changed":"2022-04-05T06:14:56+03:00"}}
 ```
 
+
 ## Use the source, Luke
 
-Made by [Andrew Dunai](https://github.com/and3rson).
+Цю штуку зробив [Andrew Dunai](https://dun.ai).
 
-Source code for this service can be found here: <https://github.com/and3rson/raid>
+Початковий код знаходиться тут: <https://github.com/and3rson/raid>
+
+## Але навіщо?
+
+Я є прихильником відкритих даних та вільного програмного забезпечення.
+
+Я вважаю, що будь-яку **інформацію, яка є відкритою,** будь-хто повинен мати змогу **опрацьовувати так, як йому заманеться**.
+
+> "*Але ж... Хіба "безкоштовний" і "вільний" - не те саме?*"
+
+"Безкоштовний" (*"gratis"*) не є синонімом для "вільний" (*"libre"*).
+
+Для прикладу, Інстаграм - безкоштовний, але він не є вільний: вони змушують вас використовувати
+саме їх власний додаток і не дають повного контролю над своїми даними та доступом до них.
+Точніше, дають, але дуже обмежений доступ.
+Це і означає термін "невільний" в контексті комп'ютерних технологій.
+
+Не ставайте рабами постачальників.
+
+Давайте зробимо світ вільнішим.
+
+\*stallman.jpg\*

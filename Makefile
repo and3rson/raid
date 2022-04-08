@@ -9,11 +9,14 @@ run:
 	go generate .
 	go run .
 
-build:
+build-docker:
 	go generate .
 	docker build -t $(ECR_URL) .
 
-push: build
+run-docker: build-docker
+	docker-compose up
+
+push-docker: build-docker
 	`AWS_PROFILE=adunai aws ecr get-login --no-include-email`
 	docker push $(ECR_URL)
 	docker logout
