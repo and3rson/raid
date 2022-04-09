@@ -1,26 +1,27 @@
 package main
 
 import (
+	"context"
 	_ "time/tzdata"
 
 	log "github.com/sirupsen/logrus"
 )
 
-// var Timezone *time.Location
-
 func main() {
 	settings := MustLoadSettings()
-	// if err = os.Setenv("TZ", TimezoneName); err != nil {
-	// 	log.Fatalf("main: set TZ: %s", err)
-	// }
-	// if Timezone, err = time.LoadLocation(TimezoneName); err != nil {
-	// 	log.Fatalf("main: load TZ: %s", err)
-	// }
 
-	go Updater(settings.Timezone)
+	if settings.Debug {
+		log.SetLevel(log.DebugLevel)
+	}
 
-	httpServer := CreateHTTPServer(settings.APIKeys)
+	topic := NewTopic()
+	ctx, cancel := context.WithCancel(context.Background())
+
+	go Updater(ctx, settings.Timezone, topic)
+
+	httpServer := CreateHTTPServer(settings.APIKeys, topic)
 	if err := httpServer.ListenAndServe(); err != nil {
+		cancel()
 		log.Fatalf("main: %s", err)
 	}
 }

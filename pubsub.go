@@ -11,8 +11,6 @@ func NewTopic() *Topic {
 	}
 }
 
-var DefaultTopic = NewTopic()
-
 func (t *Topic) Broadcast(payload Payload) {
 	for ch := range t.channels {
 		ch <- payload
@@ -20,8 +18,9 @@ func (t *Topic) Broadcast(payload Payload) {
 }
 
 func (t *Topic) Subscribe() chan Payload {
-	ch := make(chan Payload, 0)
+	ch := make(chan Payload)
 	t.channels[ch] = true
+
 	return ch
 }
 

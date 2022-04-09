@@ -26,7 +26,7 @@ type PollResponse struct {
 	State State `json:"state"`
 }
 
-func CreateWebRouter(apiKeys []string) *mux.Router {
+func CreateWebRouter(apiKeys []string, topic *Topic) *mux.Router {
 	apiKeysMap := make(map[string]bool)
 	for _, key := range apiKeys {
 		apiKeysMap[key] = true
@@ -57,6 +57,7 @@ func CreateWebRouter(apiKeys []string) *mux.Router {
 				rw.WriteHeader(403)
 				enc := json.NewEncoder(rw)
 				_ = enc.Encode(map[string]string{"error": "Unknown or missing X-API-Key value"})
+
 				return
 			}
 			next.ServeHTTP(rw, r)
@@ -75,10 +76,10 @@ func CreateWebRouter(apiKeys []string) *mux.Router {
 	})
 	apiMux.HandleFunc("/states/live", func(rw http.ResponseWriter, r *http.Request) {
 		log.Infof("api: subscribe to default topic")
-		events := DefaultTopic.Subscribe()
+		events := topic.Subscribe()
 		defer func() {
 			log.Infof("api: unsubscribe from default topic")
-			DefaultTopic.Unsubscribe(events)
+			topic.Unsubscribe(events)
 		}()
 		rw.Header().Set("Content-Type", "text/event-stream")
 		sse := NewSSEEncoder(rw)
@@ -91,6 +92,7 @@ func CreateWebRouter(apiKeys []string) *mux.Router {
 				if state, ok := ev.(*State); ok {
 					if err := sse.Write("update", PollResponse{*state}); err != nil {
 						log.Errorf("api: send SSE update: %s", err)
+
 						return
 					}
 				} else {
@@ -99,6 +101,7 @@ func CreateWebRouter(apiKeys []string) *mux.Router {
 			case <-time.After(5 * time.Second):
 				if err := sse.Write("ping", nil); err != nil {
 					log.Errorf("api: send SSE ping: %s", err)
+
 					return
 				}
 			}
@@ -109,12 +112,13 @@ func CreateWebRouter(apiKeys []string) *mux.Router {
 		rw.WriteHeader(200)
 		_, _ = rw.Write(indexContent)
 	})
+
 	return webMux
 }
 
-func CreateHTTPServer(apiKeys []string) *http.Server {
+func CreateHTTPServer(apiKeys []string, topic *Topic) *http.Server {
 	return &http.Server{
 		Addr:    "0.0.0.0:10101",
-		Handler: CreateWebRouter(apiKeys),
+		Handler: CreateWebRouter(apiKeys, topic),
 	}
 }

@@ -17,11 +17,14 @@ func NewSSEEncoder(w http.ResponseWriter) *SSEEncoder {
 func (e *SSEEncoder) Write(event string, data interface{}) error {
 	encoded, err := json.Marshal(data)
 	if err != nil {
-		return err
+		return fmt.Errorf("sse: encode event data: %w", err)
 	}
+
 	if _, err := e.writer.Write([]byte(fmt.Sprintf("event: %s\ndata: %s\n\n", event, encoded))); err != nil {
-		return err
+		return fmt.Errorf("sse: write event data: %w", err)
 	}
+
 	e.writer.(http.Flusher).Flush()
+
 	return nil
 }
