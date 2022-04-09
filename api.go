@@ -98,7 +98,7 @@ func CreateWebRouter(apiKeys []string, topic *Topic) *mux.Router {
 				} else {
 					log.Errorf("api: cannot cast event payload to *State")
 				}
-			case <-time.After(5 * time.Second):
+			case <-time.After(15 * time.Second):
 				if err := sse.Write("ping", nil); err != nil {
 					log.Errorf("api: send SSE ping: %s", err)
 
