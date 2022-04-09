@@ -21,7 +21,7 @@ build-docker:
 run-docker: build-docker
 	docker-compose up
 
-push-docker: build-docker
+push-docker: generate build-docker
 	`AWS_PROFILE=adunai aws ecr get-login --no-include-email`
 	docker push $(ECR_URL)
 	docker logout

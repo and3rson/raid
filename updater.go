@@ -41,7 +41,7 @@ func Updater(ctx context.Context, timezone *time.Location, topic *Topic) {
 			newestID = messages[len(messages)-1].ID
 			ProcessMessages(messages, timezone, topic, true)
 		} else {
-			<-time.After(5 * time.Second)
+			<-time.After(2 * time.Second)
 		}
 	}
 }

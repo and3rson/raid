@@ -3,8 +3,6 @@ This API allows you to query & listen to air raid alerts in Ukraine.
 
 Наше джерело даних - Telegram-канал [\@air_alert_ua](https://telegram.me/air_alert_ua).
 
-Події можу затримуватись до 5 секунд.
-
 Зараз надаємо інформацію лише про області (24 області та м. Київ). Крим відсутній зі списку, оскільки по ньому відсутня інформація. Але ми всі знаємо, що Крим - це Україна.
 
 ## Автентифікація
@@ -13,18 +11,19 @@ This API allows you to query & listen to air raid alerts in Ukraine.
 
   - Щоб отримати ключ, надішліть мені e-mail (<a@dun.ai>) або повідомлення в Telegram ([\@andunai](https://t.me/andunai)).
   - Надсилайте ключ в кожному запиті в заголовку `X-API-Key`.
+  - **Для фронт-ендерів**: вам знадобиться [polyfill для EventStream](https://github.com/Yaffle/EventSource), оскільки [API EventStream в браузерах](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) не підтримує надсилання заголовків в запиті.
 
 Зверніть увагу: це API має обмеження по частоті запитів. Якщо ви будете спамити зі швидкістю більше ніж 10 запитів на секунду, ви отримаєте HTTP 429.
 
 ## Ендпоінти
 
-### `/api/states`
+### `GET /api/states`
 
 Повертає список областей з їхніми статусами.
 
-Приклад відповіді:
+```yaml
+# $ curl https://alerts.dun.ai/api/states -H "X-API-Token: yourApiToken34421337"
 
-```json
 {
   "states": [
 	{
@@ -39,19 +38,24 @@ This API allows you to query & listen to air raid alerts in Ukraine.
 	  "alert": false,
 	  "changed": "2022-04-05T06:13:06+03:00"
 	},
-	// ...
+	# ...
   ]
 }
 ```
 
-### `/api/states/live`
+### `GET /api/states/live`
 
 [SSE](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)-ендпоінт, який генерує події в режимі реального часу.
 
-Приклади подій:
+Події в середньому затримуются до 2-х секунд.
 
 ```yaml
+# $ curl https://alerts.dun.ai/api/states/live -H "X-API-Token: yourApiToken34421337"
+
 event: hello
+data: null
+
+event: ping
 data: null
 
 event: ping
@@ -59,6 +63,11 @@ data: null
 
 event: update
 data: {"state":{"id":12,"name":"Львівська область","alert":false,"changed":"2022-04-05T06:14:56+03:00"}}
+
+event: ping
+data: null
+
+# ...
 ```
 
 
