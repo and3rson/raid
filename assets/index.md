@@ -1,5 +1,4 @@
 Цей API дозволяє вам отримувати інформацію про повітряні тривоги в Україні в режимі реального часу.
-This API allows you to query & listen to air raid alerts in Ukraine.
 
 Наше джерело даних - Telegram-канал [\@air_alert_ua](https://telegram.me/air_alert_ua).
 
