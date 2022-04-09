@@ -2,7 +2,7 @@
 
 Air Raid Alerts API (Ukraine)
 
-Production: <https://alerts.dun.ai/>
+Production: <https://alerts.com.ua/>
 
 # Running locally
 
