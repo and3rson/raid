@@ -1,8 +1,11 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
+	"sync"
 	"time"
 
 	_ "embed"
@@ -26,10 +29,17 @@ type PollResponse struct {
 	State State `json:"state"`
 }
 
-func CreateWebRouter(apiKeys []string, topic *Topic) *mux.Router {
+func CreateWebRouter(apiKeys []string, topic *Topic, sharedStatus *Status) *mux.Router {
 	apiKeysMap := make(map[string]bool)
 	for _, key := range apiKeys {
 		apiKeysMap[key] = true
+	}
+
+	var tooManyRequestsBody []byte
+
+	tooManyRequestsBody, err := json.Marshal(map[string]string{"error": "Too many requests"})
+	if err != nil {
+		log.Fatalf("api: prepare marshalled tooManyRequestsBody: %s", err)
 	}
 
 	webMux := mux.NewRouter()
@@ -40,8 +50,13 @@ func CreateWebRouter(apiKeys []string, topic *Topic) *mux.Router {
 	lmt.SetOnLimitReached(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(429)
-		enc := json.NewEncoder(w)
-		_ = enc.Encode(map[string]string{"error": "Too many requests"})
+		_, _ = w.Write(tooManyRequestsBody)
+		key := r.Header.Get("x-api-key")
+		// addr := r.Header.Get("x-forwarder-for")
+		// if addr == "" {
+		// 	addr = r.RemoteAddr
+		// }
+		log.Warnf("api: throttle for key %s", key)
 	})
 	lmt.SetHeader("X-API-Key", apiKeys)
 
@@ -70,7 +85,7 @@ func CreateWebRouter(apiKeys []string, topic *Topic) *mux.Router {
 		enc := json.NewEncoder(rw)
 		response := StatesResponse{
 			States,
-			LastUpdate,
+			sharedStatus.LastUpdate,
 		}
 		_ = enc.Encode(response)
 	})
@@ -116,9 +131,26 @@ func CreateWebRouter(apiKeys []string, topic *Topic) *mux.Router {
 	return webMux
 }
 
-func CreateHTTPServer(apiKeys []string, topic *Topic) *http.Server {
-	return &http.Server{
+func RunHTTPServer(ctx context.Context, wg *sync.WaitGroup, apiKeys []string, topic *Topic, sharedStatus *Status) {
+	defer wg.Done()
+	wg.Add(1)
+
+	server := &http.Server{
 		Addr:    "0.0.0.0:10101",
-		Handler: CreateWebRouter(apiKeys, topic),
+		Handler: CreateWebRouter(apiKeys, topic, sharedStatus),
+	}
+
+	go func() {
+		if err := server.ListenAndServe(); err != nil {
+			if !errors.Is(err, http.ErrServerClosed) {
+				log.Fatalf("api: serve: %s", err)
+			}
+		}
+	}()
+
+	<-ctx.Done()
+
+	if err := server.Shutdown(context.Background()); err != nil {
+		log.Fatalf("api: shutdown: %s", err)
 	}
 }

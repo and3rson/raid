@@ -3,14 +3,16 @@ package main
 import (
 	"context"
 	"strings"
+	"sync"
 	"time"
 
 	log "github.com/sirupsen/logrus"
 )
 
-var LastUpdate time.Time
+func Updater(ctx context.Context, wg *sync.WaitGroup, timezone *time.Location, topic *Topic, sharedStatus *Status) {
+	defer wg.Done()
+	wg.Add(1)
 
-func Updater(ctx context.Context, timezone *time.Location, topic *Topic) {
 	cc := NewChannelClient("air_alert_ua")
 
 	messages, err := cc.FetchLast(ctx, 200)
@@ -23,25 +25,34 @@ func Updater(ctx context.Context, timezone *time.Location, topic *Topic) {
 
 	ProcessMessages(messages, timezone, topic, false)
 
-	LastUpdate = time.Now()
+	sharedStatus.LastUpdate = time.Now()
+
+	wait := time.After(2 * time.Second)
 
 	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-wait:
+		}
+
 		messages, err = cc.FetchNewer(ctx, newestID)
 		if err != nil {
 			log.Error(err)
-			<-time.After(10 * time.Second)
+
+			wait = time.After(10 * time.Second)
 
 			continue
 		}
 
-		LastUpdate = time.Now()
+		sharedStatus.LastUpdate = time.Now()
 
 		if len(messages) > 0 {
 			log.Infof("updater: fetch %d new messages", len(messages))
 			newestID = messages[len(messages)-1].ID
 			ProcessMessages(messages, timezone, topic, true)
 		} else {
-			<-time.After(2 * time.Second)
+			wait = time.After(2 * time.Second)
 		}
 	}
 }
@@ -49,7 +60,7 @@ func Updater(ctx context.Context, timezone *time.Location, topic *Topic) {
 func ProcessMessages(messages []Message, timezone *time.Location, topic *Topic, isFresh bool) {
 	for _, msg := range messages {
 		var (
-			on bool
+			on    bool
 			state *State
 		)
 
