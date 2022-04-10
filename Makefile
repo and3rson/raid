@@ -13,7 +13,7 @@ run:
 
 lint:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-	golangci-lint run -E wsl -E wrapcheck -E nlreturn -E revive -E noctx  # -E gocritic
+	golangci-lint run -E wsl -E wrapcheck -E nlreturn -E revive -E noctx -E gocritic
 
 build-docker:
 	docker build -t $(ECR_URL) .

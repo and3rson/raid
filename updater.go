@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"sync"
 	"time"
@@ -9,7 +10,22 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func Updater(ctx context.Context, wg *sync.WaitGroup, timezone *time.Location, topic *Topic, sharedStatus *Status) {
+type Updater struct {
+	timezone *time.Location
+
+	Polls   chan time.Time
+	Updates chan *State
+}
+
+func NewUpdater(timezone *time.Location) *Updater {
+	return &Updater{
+		timezone,
+		make(chan time.Time),
+		make(chan *State),
+	}
+}
+
+func (u *Updater) Run(ctx context.Context, wg *sync.WaitGroup, errch chan error) {
 	defer wg.Done()
 	wg.Add(1)
 
@@ -17,15 +33,21 @@ func Updater(ctx context.Context, wg *sync.WaitGroup, timezone *time.Location, t
 
 	messages, err := cc.FetchLast(ctx, 200)
 	if err != nil {
-		log.Fatal(err)
+		errch <- fmt.Errorf("updater: fetch initial batch: %w", err)
+
+		return
 	}
 
 	log.Infof("updater: fetch %d last messages", len(messages))
 	newestID := messages[len(messages)-1].ID
 
-	ProcessMessages(messages, timezone, topic, false)
+	u.ProcessMessages(ctx, messages, false)
 
-	sharedStatus.LastUpdate = time.Now()
+	select {
+	case u.Polls <- time.Now():
+	case <-ctx.Done():
+		return
+	}
 
 	wait := time.After(2 * time.Second)
 
@@ -45,19 +67,23 @@ func Updater(ctx context.Context, wg *sync.WaitGroup, timezone *time.Location, t
 			continue
 		}
 
-		sharedStatus.LastUpdate = time.Now()
+		select {
+		case u.Polls <- time.Now():
+		case <-ctx.Done():
+			return
+		}
 
 		if len(messages) > 0 {
 			log.Infof("updater: fetch %d new messages", len(messages))
 			newestID = messages[len(messages)-1].ID
-			ProcessMessages(messages, timezone, topic, true)
+			u.ProcessMessages(ctx, messages, true)
 		} else {
 			wait = time.After(2 * time.Second)
 		}
 	}
 }
 
-func ProcessMessages(messages []Message, timezone *time.Location, topic *Topic, isFresh bool) {
+func (u *Updater) ProcessMessages(ctx context.Context, messages []Message, isFresh bool) {
 	for _, msg := range messages {
 		var (
 			on    bool
@@ -84,12 +110,16 @@ func ProcessMessages(messages []Message, timezone *time.Location, topic *Topic, 
 		if state == nil {
 			log.Debugf("updater: no known states found in \"%s\"", sentence)
 		} else {
-			t := msg.Date.In(timezone)
+			t := msg.Date.In(u.timezone)
 			state.Changed = &t
 			state.Alert = on
 			log.Debugf("updater: new state: %s (id=%d) -> %v", state.Name, state.ID, on)
 			if isFresh {
-				topic.Broadcast(state)
+				select {
+				case u.Updates <- state:
+				case <-ctx.Done():
+					return
+				}
 			}
 		}
 	}
