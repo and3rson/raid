@@ -84,7 +84,13 @@ code {
     font-family: Consolas, Monaco, Andale Mono, monospace;
     line-height: 1.5;
 	color: #AAAAFF;
+    background: #333333;
+    padding: 0.25rem;
     /* font-size: 13px; */
+}
+pre > code {
+    background: none;
+    padding: 0;
 }
 aside {
     display: block;
@@ -273,4 +279,14 @@ button:active {
 button::-moz-focus-inner {
   padding: 0;
   border: 0;
+}
+table {
+    border-collapse: collapse;
+}
+table tr.header {
+    background: #333;
+    white-space: nowrap;
+}
+table th, table td {
+    padding: 0.5rem;
 }

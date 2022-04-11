@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
+	"embed"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/fs"
 	"net/http"
 	"sync"
 	"time"
@@ -20,6 +22,9 @@ import (
 //go:generate make -C assets
 //go:embed assets/index.html
 var indexContent []byte
+
+//go:embed static/*
+var staticFS embed.FS
 
 //go:embed assets/index.en.html
 var indexEnContent []byte
@@ -42,6 +47,7 @@ type APIServer struct {
 	lastUpdate        time.Time
 	addrRateLimiter   throttled.RateLimiter
 	apiKeyRateLimiter throttled.RateLimiter
+	staticDirFS       fs.FS
 }
 
 func CreateRateLimiter(perSec int, burst int) throttled.RateLimiter {
@@ -67,6 +73,11 @@ func NewAPIServer(port uint16, apiKeys []string, polls *Topic[time.Time], update
 		apiKeysMap[key] = true
 	}
 
+	staticDirFS, err := fs.Sub(staticFS, "static")
+	if err != nil {
+		log.Fatalf("api: create sub fs: %v", err)
+	}
+
 	return &APIServer{
 		port:              port,
 		apiKeys:           apiKeys,
@@ -76,6 +87,7 @@ func NewAPIServer(port uint16, apiKeys []string, polls *Topic[time.Time], update
 		lastUpdate:        time.Time{},
 		addrRateLimiter:   CreateRateLimiter(10, 10),
 		apiKeyRateLimiter: CreateRateLimiter(100, 100),
+		staticDirFS:       staticDirFS,
 	}
 }
 
@@ -186,6 +198,12 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 		rw.WriteHeader(200)
 		_, _ = rw.Write(indexEnContent)
 	})
+	webMux.HandleFunc("/en", func(rw http.ResponseWriter, r *http.Request) {
+		rw.Header().Add("Content-Type", "text/html; charset=utf-8")
+		rw.WriteHeader(200)
+		_, _ = rw.Write(indexEnContent)
+	})
+	webMux.PathPrefix("/").Handler(http.FileServer(http.FS(a.staticDirFS)))
 
 	return webMux
 }
