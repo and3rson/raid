@@ -1,6 +1,6 @@
 module github.com/and3rson/raid
 
-go 1.17
+go 1.18
 
 require (
 	github.com/andybalholm/cascadia v1.3.1

@@ -13,16 +13,16 @@ import (
 type Updater struct {
 	timezone    *time.Location
 	backlogSize int
-	Polls       chan time.Time
-	Updates     chan *State
+	Polls       *Topic[time.Time]
+	Updates     *Topic[*State]
 }
 
 func NewUpdater(timezone *time.Location, backlogSize int) *Updater {
 	return &Updater{
 		timezone,
 		backlogSize,
-		make(chan time.Time),
-		make(chan *State),
+		NewTopic[time.Time](),
+		NewTopic[*State](),
 	}
 }
 
@@ -44,11 +44,7 @@ func (u *Updater) Run(ctx context.Context, wg *sync.WaitGroup, errch chan error)
 
 	u.ProcessMessages(ctx, messages, false)
 
-	select {
-	case u.Polls <- time.Now():
-	case <-ctx.Done():
-		return
-	}
+	u.Polls.Broadcast(time.Now())
 
 	wait := time.After(2 * time.Second)
 
@@ -68,16 +64,14 @@ func (u *Updater) Run(ctx context.Context, wg *sync.WaitGroup, errch chan error)
 			continue
 		}
 
-		select {
-		case u.Polls <- time.Now():
-		case <-ctx.Done():
-			return
-		}
+		u.Polls.Broadcast(time.Now())
 
 		if len(messages) > 0 {
 			log.Infof("updater: fetch %d new messages", len(messages))
 			newestID = messages[len(messages)-1].ID
 			u.ProcessMessages(ctx, messages, true)
+
+			wait = time.After(0)
 		} else {
 			wait = time.After(2 * time.Second)
 		}
@@ -116,11 +110,7 @@ func (u *Updater) ProcessMessages(ctx context.Context, messages []Message, isFre
 			state.Alert = on
 			log.Debugf("updater: new state: %s (id=%d) -> %v", state.Name, state.ID, on)
 			if isFresh {
-				select {
-				case u.Updates <- state:
-				case <-ctx.Done():
-					return
-				}
+				u.Updates.Broadcast(state)
 			}
 		}
 	}

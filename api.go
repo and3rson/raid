@@ -36,8 +36,8 @@ type PollResponse struct {
 type APIServer struct {
 	apiKeys           []string
 	apiKeysMap        map[string]bool
-	polls             chan time.Time
-	updates           chan *State
+	polls             *Topic[time.Time]
+	updates           *Topic[*State]
 	lastUpdate        time.Time
 	addrRateLimiter   throttled.RateLimiter
 	apiKeyRateLimiter throttled.RateLimiter
@@ -60,7 +60,7 @@ func CreateRateLimiter(perSec int, burst int) throttled.RateLimiter {
 	return rateLimiter
 }
 
-func NewAPIServer(apiKeys []string, polls chan time.Time, updates chan *State) *APIServer {
+func NewAPIServer(apiKeys []string, polls *Topic[time.Time], updates *Topic[*State]) *APIServer {
 	apiKeysMap := make(map[string]bool)
 	for _, key := range apiKeys {
 		apiKeysMap[key] = true
@@ -78,17 +78,13 @@ func NewAPIServer(apiKeys []string, polls chan time.Time, updates chan *State) *
 }
 
 func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
-	listeners := make(map[chan *State]bool)
-
 	go func() {
+		polls := a.polls.Subscribe()
+
 		for {
 			select {
-			case poll := <-a.polls:
+			case poll := <-polls:
 				a.lastUpdate = poll
-			case state := <-a.updates:
-				for ch := range listeners {
-					ch <- state
-				}
 			case <-ctx.Done():
 				return
 			}
@@ -149,11 +145,10 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 	})
 	apiMux.HandleFunc("/states/live", func(rw http.ResponseWriter, r *http.Request) {
 		log.Infof("api: subscribe to events")
-		events := make(chan *State)
-		listeners[events] = true
+		events := a.updates.Subscribe()
 		defer func() {
 			log.Infof("api: unsubscribe from events")
-			delete(listeners, events)
+			a.updates.Unsubscribe(events)
 		}()
 		rw.Header().Set("Content-Type", "text/event-stream")
 		sse := NewSSEEncoder(rw)

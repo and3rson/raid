@@ -19,15 +19,16 @@ func main() {
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
-
 	wg := &sync.WaitGroup{}
+	errch := make(chan error, 3)
 
-	errch := make(chan error, 2)
 	updater := NewUpdater(settings.Timezone, settings.BacklogSize)
 	apiServer := NewAPIServer(settings.APIKeys, updater.Polls, updater.Updates)
+	tcpServer := NewTCPServer(10102, settings.APIKeys, updater.Polls, updater.Updates)
 
 	go updater.Run(ctx, wg, errch)
 	go apiServer.Run(ctx, wg, errch)
+	go tcpServer.Run(ctx, wg, errch)
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
