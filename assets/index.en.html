@@ -89,22 +89,22 @@
 <header id="title-block-header">
 <h1 class="title">Air Raid Alert API (Ukraine)</h1>
 </header>
-<p><em>(English version is <a href="/en">available here</a>.)</em></p>
-<p>Цей API дозволяє вам отримувати інформацію про повітряні тривоги в Україні в режимі реального часу.</p>
-<p>Наше джерело даних - Telegram-канал <a href="https://telegram.me/air_alert_ua">@air_alert_ua</a>.</p>
-<p>Події в середньому затримуются до 2-х секунд.</p>
-<p>Зараз надаємо інформацію лише про області (24 області та м. Київ). Крим відсутній зі списку, оскільки по ньому відсутня інформація. Але ми всі знаємо, що Крим - це Україна.</p>
-<h2 id="автентифікація">Автентифікація</h2>
-<p>Вам потрібно ключ для роботи з цим API.</p>
+<p><em>(Ukrainian version is <a href="/">available here</a>.)</em></p>
+<p>This API allows you to query air raid alerts in Ukraine in real-time.</p>
+<p>Data is taken from <a href="https://telegram.me/air_alert_ua" class="uri">https://telegram.me/air_alert_ua</a>.</p>
+<p>Events are usually delayed for up to 2 seconds.</p>
+<p>Only states are supported at this moment - 24 total plus Kyiv city. Crimea is absent from this list since no information is available. But we all know that Crimea is Ukraine.</p>
+<h2 id="authentication">Authentication</h2>
+<p>You will need a key to use this API.</p>
 <ul>
-<li>Щоб отримати ключ, надішліть мені e-mail (<a href="mailto:a@dun.ai" class="email">a@dun.ai</a>) або повідомлення в Telegram (<a href="https://t.me/andunai">@andunai</a>).</li>
-<li>Надсилайте ключ в кожному запиті в заголовку <code>X-API-Key</code>.</li>
-<li><strong>Для фронт-ендерів</strong>: вам знадобиться <a href="https://github.com/Yaffle/EventSource">polyfill для EventStream</a>, оскільки <a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">API EventStream в браузерах</a> не підтримує надсилання заголовків в запиті.</li>
+<li>To request a key, please send me an email (<a href="mailto:a@dun.ai" class="email">a@dun.ai</a>) or ping me in Telegram (<a href="https://t.me/andunai">@andunai</a>).</li>
+<li>Include the key with every request in <code>X-API-Key</code> header.</li>
+<li><strong>When writing front-end code</strong>: you’ll need a <a href="https://github.com/Yaffle/EventSource">polyfill for EventStream</a> since <a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">browser’s EventStream API</a> does not allow sending headers with requests.</li>
 </ul>
-<p>Зверніть увагу: це API має обмеження по частоті запитів. Якщо ви будете спамити зі швидкістю більше ніж 10 запитів на секунду, ви отримаєте HTTP 429.</p>
-<h2 id="ендпоїнти">Ендпоїнти</h2>
-<h3 id="get-apistates"><code>GET /api/states</code></h3>
-<p>Повертає список областей з їхніми статусами.</p>
+<p>Please be aware that this API is rate-limited. If you spam more than 10 RPS, you will be throttled with a HTTP 429 response.</p>
+<h2 id="endpoints">Endpoints</h2>
+<h3 id="apistates"><code>/api/states</code></h3>
+<p>Returns the list of states with their statuses.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># $ curl https://alerts.dun.ai/api/states -H &quot;X-API-Token: yourApiToken34421337&quot;</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">{</span></span>
@@ -124,8 +124,8 @@
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">    # ...</span></span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">]</span></span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span></code></pre></div>
-<h3 id="get-apistateslive"><code>GET /api/states/live</code></h3>
-<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">SSE</a>-ендпоінт, який генерує події в режимі реального часу.</p>
+<h3 id="apistateslive"><code>/api/states/live</code></h3>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">SSE</a> endpoint which yields alert events in real time.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># $ curl https://alerts.dun.ai/api/states/live -H &quot;X-API-Token: yourApiToken34421337&quot;</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">event</span><span class="kw">:</span><span class="at"> hello</span></span>
@@ -145,18 +145,18 @@
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span></code></pre></div>
 <h2 id="use-the-source-luke">Use the source, Luke</h2>
-<p>Цю штуку зробив <a href="https://dun.ai">Andrew Dunai</a>.</p>
-<p>Початковий код знаходиться тут: <a href="https://github.com/and3rson/raid" class="uri">https://github.com/and3rson/raid</a></p>
-<h2 id="але-навіщо">Але навіщо?</h2>
-<p>Я є прихильником відкритих даних та вільного програмного забезпечення.</p>
-<p>Я вважаю, що будь-яку <strong>інформацію, яка є відкритою,</strong> будь-хто повинен мати змогу <strong>опрацьовувати так, як йому заманеться</strong>.</p>
+<p>This thing was made by <a href="https://github.com/and3rson">Andrew Dunai</a>.</p>
+<p>Source code for this service can be found here: <a href="https://github.com/and3rson/raid" class="uri">https://github.com/and3rson/raid</a></p>
+<h2 id="but-why">But why?</h2>
+<p>I support and preach the principles of open data and FOSS.</p>
+<p>I believe that everyone should be allowed to process any <strong>information which is publicly available</strong> in any ways they choose.</p>
 <blockquote>
-<p>“<em>Але ж… Хіба ”безкоштовний” і ”вільний” - не те саме?</em>”</p>
+<p>“<em>But… Doesn’t ”free” mean ”free of charge”? Isn’t free and ”libre” the same?</em>”</p>
 </blockquote>
-<p>“Безкоштовний” (<em>“gratis”</em>) не є синонімом для “вільний” (<em>“libre”</em>).</p>
-<p>Для прикладу, Інстаграм - безкоштовний, але він не є вільний: вони змушують вас використовувати саме їх власний додаток і не дають повного контролю над своїми даними та доступом до них. Точніше, дають, але дуже обмежений доступ. Це і означає термін “невільний” в контексті комп’ютерних технологій.</p>
-<p>Не ставайте рабами постачальників.</p>
-<p>Давайте зробимо світ вільнішим.</p>
+<p>“Free” (as in beer) and “free” (as in freedom, also called “libre”) are totally different concepts.</p>
+<p>For example, Instagram is free of charge. However it’s not freedom: they force you to use their own application and refuse to provide you full access over your data. In fact, they give you some control but it’s very limited and heavily supervised. This is what “non-free” means in the context of computer technologies.</p>
+<p>Don’t become vendor-locked.</p>
+<p>Let’s make our world libre.</p>
 <p>*stallman.jpg*</p>
 </body>
 </html>

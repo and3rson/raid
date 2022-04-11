@@ -17,9 +17,11 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//go:generate pandoc -f markdown -s assets/index.md -c assets/style.css --metadata "title=Air Raid Alert API (Ukraine)" --self-contained --highlight-style breezedark -o assets/index.html
+//go:generate make -C assets
 //go:embed assets/index.html
 var indexContent []byte
+//go:embed assets/index.en.html
+var indexEnContent []byte
 
 type StatesResponse struct {
 	States     []State   `json:"states"`
@@ -156,6 +158,11 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 		rw.Header().Add("Content-Type", "text/html; charset=utf-8")
 		rw.WriteHeader(200)
 		_, _ = rw.Write(indexContent)
+	})
+	webMux.HandleFunc("/en", func(rw http.ResponseWriter, r *http.Request) {
+		rw.Header().Add("Content-Type", "text/html; charset=utf-8")
+		rw.WriteHeader(200)
+		_, _ = rw.Write(indexEnContent)
 	})
 
 	return webMux
