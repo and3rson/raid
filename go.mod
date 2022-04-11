@@ -13,6 +13,8 @@ require (
 
 require (
 	github.com/go-pkgz/expirable-cache v0.0.3 // indirect
+	github.com/hashicorp/go-version v0.0.0-20161031182605-e96d38404026 // indirect
+	github.com/liip/sheriff v0.11.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
 	golang.org/x/time v0.0.0-20200416051211-89c76fbcd5d1 // indirect

@@ -25,19 +25,21 @@
 Повертає список областей з їхніми статусами.
 
 ```yaml
-# $ curl https://alerts.dun.ai/api/states -H "X-API-Token: yourApiToken34421337"
+# $ curl https://alerts.dun.ai/api/states -H "X-API-Key: yourApiKey34421337"
 
 {
   "states": [
 	{
 	  "id": 1,
 	  "name": "Вінницька область",
+      "name_en": "Vinnytsia oblast",
 	  "alert": false,
 	  "changed": "2022-04-05T06:12:52+03:00"
 	},
 	{
 	  "id": 2,
 	  "name": "Волинська область",
+      "name_en": "Volyn oblast",
 	  "alert": false,
 	  "changed": "2022-04-05T06:13:06+03:00"
 	},
@@ -51,7 +53,7 @@
 [SSE](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)-ендпоінт, який генерує події в режимі реального часу.
 
 ```yaml
-# $ curl https://alerts.dun.ai/api/states/live -H "X-API-Token: yourApiToken34421337"
+# $ curl https://alerts.dun.ai/api/states/live -H "X-API-Key: yourApiKey34421337"
 
 event: hello
 data: null
@@ -63,7 +65,7 @@ event: ping
 data: null
 
 event: update
-data: {"state":{"id":12,"name":"Львівська область","alert":false,"changed":"2022-04-05T06:14:56+03:00"}}
+data: {"state":{"id":12,"name":"Львівська область","name_en":"Lviv oblast","alert":false,"changed":"2022-04-05T06:14:56+03:00"}}
 
 event: ping
 data: null
