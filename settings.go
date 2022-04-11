@@ -12,6 +12,7 @@ type Settings struct {
 	Timezone     *time.Location
 	APIKeys      []string `env:"API_KEYS" envSeparator:","`
 	Debug        bool     `env:"DEBUG" envDefault:"false"`
+	BacklogSize  int      `env:"BACKLOG_SIZE" envDefault:"200"`
 }
 
 func MustLoadSettings() (settings Settings) {

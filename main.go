@@ -23,7 +23,7 @@ func main() {
 	wg := &sync.WaitGroup{}
 
 	errch := make(chan error, 2)
-	updater := NewUpdater(settings.Timezone)
+	updater := NewUpdater(settings.Timezone, settings.BacklogSize)
 	apiServer := NewAPIServer(settings.APIKeys, updater.Polls, updater.Updates)
 
 	go updater.Run(ctx, wg, errch)

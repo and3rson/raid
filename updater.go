@@ -11,15 +11,16 @@ import (
 )
 
 type Updater struct {
-	timezone *time.Location
-
-	Polls   chan time.Time
-	Updates chan *State
+	timezone    *time.Location
+	backlogSize int
+	Polls       chan time.Time
+	Updates     chan *State
 }
 
-func NewUpdater(timezone *time.Location) *Updater {
+func NewUpdater(timezone *time.Location, backlogSize int) *Updater {
 	return &Updater{
 		timezone,
+		backlogSize,
 		make(chan time.Time),
 		make(chan *State),
 	}
@@ -31,7 +32,7 @@ func (u *Updater) Run(ctx context.Context, wg *sync.WaitGroup, errch chan error)
 
 	cc := NewChannelClient("air_alert_ua")
 
-	messages, err := cc.FetchLast(ctx, 200)
+	messages, err := cc.FetchLast(ctx, u.backlogSize)
 	if err != nil {
 		errch <- fmt.Errorf("updater: fetch initial batch: %w", err)
 
