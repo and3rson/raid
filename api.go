@@ -34,6 +34,7 @@ type PollResponse struct {
 }
 
 type APIServer struct {
+	port              uint16
 	apiKeys           []string
 	apiKeysMap        map[string]bool
 	polls             *Topic[time.Time]
@@ -60,13 +61,14 @@ func CreateRateLimiter(perSec int, burst int) throttled.RateLimiter {
 	return rateLimiter
 }
 
-func NewAPIServer(apiKeys []string, polls *Topic[time.Time], updates *Topic[*State]) *APIServer {
+func NewAPIServer(port uint16, apiKeys []string, polls *Topic[time.Time], updates *Topic[*State]) *APIServer {
 	apiKeysMap := make(map[string]bool)
 	for _, key := range apiKeys {
 		apiKeysMap[key] = true
 	}
 
 	return &APIServer{
+		port:              port,
 		apiKeys:           apiKeys,
 		apiKeysMap:        apiKeysMap,
 		polls:             polls,
@@ -193,7 +195,7 @@ func (a *APIServer) Run(ctx context.Context, wg *sync.WaitGroup, errch chan erro
 	wg.Add(1)
 
 	server := &http.Server{
-		Addr:    "0.0.0.0:10101",
+		Addr:    fmt.Sprintf("0.0.0.0:%d", a.port),
 		Handler: a.CreateRouter(ctx),
 	}
 

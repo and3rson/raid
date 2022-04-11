@@ -83,6 +83,7 @@ pre {
 code {
     font-family: Consolas, Monaco, Andale Mono, monospace;
     line-height: 1.5;
+	color: #AAAAFF;
     /* font-size: 13px; */
 }
 aside {

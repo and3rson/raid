@@ -10,3 +10,4 @@ services:
     restart: always
     ports:
       - 10101:10101
+      - 1024:1024

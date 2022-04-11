@@ -4,11 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math/rand"
 	"net"
 	"strings"
 	"sync"
 	"time"
-	"math/rand"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -74,7 +74,7 @@ func (t *TCPServer) Run(ctx context.Context, wg *sync.WaitGroup, errch chan erro
 func (t *TCPServer) HandleConn(ctx context.Context, conn net.Conn) {
 	defer conn.Close()
 
-	if err := conn.SetReadDeadline(time.Now().Add(time.Second * 1)); err != nil {
+	if err := conn.SetReadDeadline(time.Now().Add(time.Second * 3)); err != nil {
 		log.Errorf("tcpserver: set deadline: %v", err)
 
 		return
@@ -86,7 +86,7 @@ func (t *TCPServer) HandleConn(ctx context.Context, conn net.Conn) {
 	if err != nil {
 		log.Errorf("tcpserver: read auth: %v", err)
 
-		_, _ = conn.Write([]byte("e:auth_timeout\n"))
+		_, _ = conn.Write([]byte("a:timeout\n"))
 
 		return
 	}
@@ -103,7 +103,13 @@ func (t *TCPServer) HandleConn(ctx context.Context, conn net.Conn) {
 	log.Debugf("tcpserver: client auth success: %v", authSuccess)
 
 	if !authSuccess {
-		_, _ = conn.Write([]byte("e:wrong_api_key\n"))
+		_, _ = conn.Write([]byte("a:wrong_api_key\n"))
+
+		return
+	}
+
+	if _, err := conn.Write([]byte("a:ok\n")); err != nil {
+		log.Errorf("tcpserver: write auth success: %v", err)
 
 		return
 	}

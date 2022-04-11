@@ -23,8 +23,8 @@ func main() {
 	errch := make(chan error, 3)
 
 	updater := NewUpdater(settings.Timezone, settings.BacklogSize)
-	apiServer := NewAPIServer(settings.APIKeys, updater.Polls, updater.Updates)
-	tcpServer := NewTCPServer(10102, settings.APIKeys, updater.Polls, updater.Updates)
+	apiServer := NewAPIServer(10101, settings.APIKeys, updater.Polls, updater.Updates)
+	tcpServer := NewTCPServer(1024, settings.APIKeys, updater.Polls, updater.Updates)
 
 	go updater.Run(ctx, wg, errch)
 	go apiServer.Run(ctx, wg, errch)
