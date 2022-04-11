@@ -16,7 +16,12 @@ You will need a key to use this API.
   - Include the key with every request in `X-API-Key` header.
   - **When writing front-end code**: you'll need a [polyfill for EventStream](https://github.com/Yaffle/EventSource) since [browser's EventStream API](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) does not allow sending headers with requests.
 
-Please be aware that this API is rate-limited. If you spam more than 10 RPS, you will be throttled with a HTTP 429 response.
+Please be aware that this API is rate-limited:
+
+  - Max request rate from single address: 10 RPS
+  - Max request rate per API key: 100 RPS
+
+If you exceed the above limits you will be throttled with a HTTP 429 response.
 
 ## Endpoints
 

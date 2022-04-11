@@ -11,15 +11,16 @@ import (
 
 	_ "embed"
 
-	"github.com/didip/tollbooth/v6"
-	"github.com/didip/tollbooth/v6/limiter"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
+	"github.com/throttled/throttled/v2"
+	"github.com/throttled/throttled/v2/store/memstore"
 )
 
 //go:generate make -C assets
 //go:embed assets/index.html
 var indexContent []byte
+
 //go:embed assets/index.en.html
 var indexEnContent []byte
 
@@ -33,11 +34,30 @@ type PollResponse struct {
 }
 
 type APIServer struct {
-	apiKeys    []string
-	apiKeysMap map[string]bool
-	polls      chan time.Time
-	updates    chan *State
-	lastUpdate time.Time
+	apiKeys           []string
+	apiKeysMap        map[string]bool
+	polls             chan time.Time
+	updates           chan *State
+	lastUpdate        time.Time
+	addrRateLimiter   throttled.RateLimiter
+	apiKeyRateLimiter throttled.RateLimiter
+}
+
+func CreateRateLimiter(perSec int, burst int) throttled.RateLimiter {
+	store, err := memstore.New(16384)
+	if err != nil {
+		log.Fatalf("api: create memstore: %s", err)
+	}
+
+	rateLimiter, err := throttled.NewGCRARateLimiter(store, throttled.RateQuota{
+		MaxRate:  throttled.PerSec(perSec),
+		MaxBurst: burst,
+	})
+	if err != nil {
+		log.Fatalf("api: create rate limiter: %s", err)
+	}
+
+	return rateLimiter
 }
 
 func NewAPIServer(apiKeys []string, polls chan time.Time, updates chan *State) *APIServer {
@@ -47,11 +67,13 @@ func NewAPIServer(apiKeys []string, polls chan time.Time, updates chan *State) *
 	}
 
 	return &APIServer{
-		apiKeys:    apiKeys,
-		apiKeysMap: apiKeysMap,
-		polls:      polls,
-		updates:    updates,
-		lastUpdate: time.Time{},
+		apiKeys:           apiKeys,
+		apiKeysMap:        apiKeysMap,
+		polls:             polls,
+		updates:           updates,
+		lastUpdate:        time.Time{},
+		addrRateLimiter:   CreateRateLimiter(10, 10),
+		apiKeyRateLimiter: CreateRateLimiter(100, 100),
 	}
 }
 
@@ -73,30 +95,33 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 		}
 	}()
 
-	tooManyRequestsBody := []byte("{\"error\": \"Too many requests\"}")
-
 	webMux := mux.NewRouter()
 	apiMux := webMux.PathPrefix("/api").Subrouter()
-	lmt := tollbooth.NewLimiter(10, &limiter.ExpirableOptions{DefaultExpirationTTL: time.Hour})
-	lmt.SetIPLookups([]string{"RemoteAddr", "X-Forwarded-For", "X-Real-IP"})
-	lmt.SetOverrideDefaultResponseWriter(true)
-	lmt.SetOnLimitReached(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Add("Content-Type", "application/json")
-		w.WriteHeader(429)
-		_, _ = w.Write(tooManyRequestsBody)
-		key := r.Header.Get("x-api-key")
-		// addr := r.Header.Get("x-forwarder-for")
-		// if addr == "" {
-		// 	addr = r.RemoteAddr
-		// }
-		log.Warnf("api: throttle for key %s", key)
-	})
-	lmt.SetHeader("X-API-Key", a.apiKeys)
+	httpAPIKeyRateLimiter := throttled.HTTPRateLimiter{
+		DeniedHandler: http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+			rw.WriteHeader(429)
+			enc := json.NewEncoder(rw)
+			_ = enc.Encode(map[string]string{"error": "Too many requests using your API key"})
+		}),
+		RateLimiter: a.apiKeyRateLimiter,
+		VaryBy: &throttled.VaryBy{
+			Headers: []string{"X-API-Key"},
+		},
+	}
+	httpAddrRateLimiter := throttled.HTTPRateLimiter{
+		DeniedHandler: http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+			rw.WriteHeader(429)
+			enc := json.NewEncoder(rw)
+			_ = enc.Encode(map[string]string{"error": "Too many requests from your address"})
+		}),
+		RateLimiter: a.addrRateLimiter,
+		VaryBy: &throttled.VaryBy{
+			RemoteAddr: true,
+		},
+	}
 
-	// First middleware will be applied last.
-	apiMux.Use(func(h http.Handler) http.Handler {
-		return tollbooth.LimitHandler(lmt, h)
-	})
+	apiMux.Use(httpAPIKeyRateLimiter.RateLimit)
+	apiMux.Use(httpAddrRateLimiter.RateLimit)
 	apiMux.Use(func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 			key := r.Header.Get("x-api-key")

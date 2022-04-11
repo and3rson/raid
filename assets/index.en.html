@@ -101,7 +101,12 @@
 <li>Include the key with every request in <code>X-API-Key</code> header.</li>
 <li><strong>When writing front-end code</strong>: you’ll need a <a href="https://github.com/Yaffle/EventSource">polyfill for EventStream</a> since <a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">browser’s EventStream API</a> does not allow sending headers with requests.</li>
 </ul>
-<p>Please be aware that this API is rate-limited. If you spam more than 10 RPS, you will be throttled with a HTTP 429 response.</p>
+<p>Please be aware that this API is rate-limited:</p>
+<ul>
+<li>Max request rate from single address: 10 RPS</li>
+<li>Max request rate per API key: 100 RPS</li>
+</ul>
+<p>If you exceed the above limits you will be throttled with a HTTP 429 response.</p>
 <h2 id="endpoints">Endpoints</h2>
 <h3 id="apistates"><code>/api/states</code></h3>
 <p>Returns the list of states with their statuses.</p>
