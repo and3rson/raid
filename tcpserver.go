@@ -14,18 +14,18 @@ import (
 )
 
 type TCPServer struct {
-	port    uint16
-	apiKeys []string
-	polls   *Topic[time.Time]
-	updates *Topic[*State]
+	port         uint16
+	apiKeys      []string
+	updaterState *UpdaterState
+	updates      *Topic[*State]
 }
 
-func NewTCPServer(port uint16, apiKeys []string, polls *Topic[time.Time], updates *Topic[*State]) *TCPServer {
+func NewTCPServer(port uint16, apiKeys []string, updaterState *UpdaterState, updates *Topic[*State]) *TCPServer {
 	return &TCPServer{
-		port:    port,
-		apiKeys: apiKeys,
-		polls:   polls,
-		updates: updates,
+		port:         port,
+		apiKeys:      apiKeys,
+		updaterState: updaterState,
+		updates:      updates,
 	}
 }
 
@@ -114,7 +114,7 @@ func (t *TCPServer) HandleConn(ctx context.Context, conn net.Conn) {
 		return
 	}
 
-	for _, state := range States {
+	for _, state := range t.updaterState.States {
 		alert := 0
 		if state.Alert {
 			alert = 1

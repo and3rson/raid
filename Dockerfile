@@ -2,10 +2,11 @@ FROM golang:1.18-alpine AS builder
 
 RUN apk add ca-certificates
 WORKDIR /go/src/github.com/and3rson/raid
-COPY *.go go.mod go.sum ./
-RUN go get
+COPY go.mod go.sum ./
+RUN go mod download -x
 COPY assets ./assets
 COPY static ./static
+COPY *.go ./
 RUN mkdir /out && CGO_ENABLED=0 go build -o /out/raid
 
 FROM scratch

@@ -22,9 +22,16 @@ func main() {
 	wg := &sync.WaitGroup{}
 	errch := make(chan error, 3)
 
-	updater := NewUpdater(settings.Timezone, settings.BacklogSize)
-	apiServer := NewAPIServer(10101, settings.APIKeys, updater.Polls, updater.Updates)
-	tcpServer := NewTCPServer(1024, settings.APIKeys, updater.Polls, updater.Updates)
+	updaterState := &UpdaterState{}
+
+	persistence, err := NewPersistence(updaterState, "./data/app_state.json")
+	if err != nil {
+		log.Fatalf("main: create app state persistence: %v", err)
+	}
+
+	updater := NewUpdater(settings.Timezone, settings.BacklogSize, updaterState)
+	apiServer := NewAPIServer(10101, settings.APIKeys, updaterState, updater.Updates)
+	tcpServer := NewTCPServer(1024, settings.APIKeys, updaterState, updater.Updates)
 
 	go updater.Run(ctx, wg, errch)
 	go apiServer.Run(ctx, wg, errch)
@@ -42,5 +49,11 @@ func main() {
 	cancel()
 	log.Warnf("main: waiting for all children to terminate")
 	wg.Wait()
+	log.Warnf("main: saving updater state")
+
+	if err := persistence.Save(); err != nil {
+		log.Fatalf("main: failed to save updater state: %v", err)
+	}
+
 	log.Warnf("main: finished")
 }

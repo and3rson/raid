@@ -42,9 +42,8 @@ type APIServer struct {
 	port              uint16
 	apiKeys           []string
 	apiKeysMap        map[string]bool
-	polls             *Topic[time.Time]
+	updaterState      *UpdaterState
 	updates           *Topic[*State]
-	lastUpdate        time.Time
 	addrRateLimiter   throttled.RateLimiter
 	apiKeyRateLimiter throttled.RateLimiter
 	staticDirFS       fs.FS
@@ -67,7 +66,7 @@ func CreateRateLimiter(perSec int, burst int) throttled.RateLimiter {
 	return rateLimiter
 }
 
-func NewAPIServer(port uint16, apiKeys []string, polls *Topic[time.Time], updates *Topic[*State]) *APIServer {
+func NewAPIServer(port uint16, apiKeys []string, updaterState *UpdaterState, updates *Topic[*State]) *APIServer {
 	apiKeysMap := make(map[string]bool)
 	for _, key := range apiKeys {
 		apiKeysMap[key] = true
@@ -82,9 +81,8 @@ func NewAPIServer(port uint16, apiKeys []string, polls *Topic[time.Time], update
 		port:              port,
 		apiKeys:           apiKeys,
 		apiKeysMap:        apiKeysMap,
-		polls:             polls,
+		updaterState:      updaterState,
 		updates:           updates,
-		lastUpdate:        time.Time{},
 		addrRateLimiter:   CreateRateLimiter(10, 10),
 		apiKeyRateLimiter: CreateRateLimiter(100, 100),
 		staticDirFS:       staticDirFS,
@@ -92,19 +90,6 @@ func NewAPIServer(port uint16, apiKeys []string, polls *Topic[time.Time], update
 }
 
 func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
-	go func() {
-		polls := a.polls.Subscribe()
-
-		for {
-			select {
-			case poll := <-polls:
-				a.lastUpdate = poll
-			case <-ctx.Done():
-				return
-			}
-		}
-	}()
-
 	webMux := mux.NewRouter()
 	apiMux := webMux.PathPrefix("/api").Subrouter()
 	httpAPIKeyRateLimiter := throttled.HTTPRateLimiter{
@@ -152,8 +137,8 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 		rw.WriteHeader(200)
 		enc := json.NewEncoder(rw)
 		response := StatesResponse{
-			States,
-			a.lastUpdate,
+			a.updaterState.States,
+			a.updaterState.LastUpdate,
 		}
 		_ = enc.Encode(response)
 	})
