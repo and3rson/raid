@@ -13,6 +13,7 @@ import (
 
 	_ "embed"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"github.com/throttled/throttled/v2"
@@ -115,6 +116,11 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 		},
 	}
 
+	apiMux.Use(handlers.CORS(
+		handlers.AllowedHeaders([]string{"X-API-Key"}),
+		handlers.AllowedMethods([]string{"GET", "HEAD", "OPTIONS"}),
+		handlers.AllowedOrigins([]string{"*"}),
+	))
 	apiMux.Use(httpAPIKeyRateLimiter.RateLimit)
 	apiMux.Use(httpAddrRateLimiter.RateLimit)
 	apiMux.Use(func(next http.Handler) http.Handler {
