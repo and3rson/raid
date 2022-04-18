@@ -6,9 +6,13 @@ Data is taken from <https://telegram.me/air_alert_ua>.
 
 Events are usually delayed for up to 2 seconds.
 
-Only states are supported at this moment - 24 total plus Kyiv city. Crimea is absent from this list since no information is available. But we all know that Crimea is Ukraine.
+Only regions are supported at this moment - 24 total plus Kyiv city. Crimea is absent from this list since no information is available. But we all know that Crimea is Ukraine.
 
-## Authentication
+Service works in two modes: HTTP and TCP.
+
+# A. HTTP mode
+
+## A1. Authentication
 
 You will need a key to use this API.
 
@@ -23,11 +27,11 @@ Please be aware that this API is rate-limited:
 
 If you exceed the above limits you will be throttled with a HTTP 429 response.
 
-## Endpoints
+## A2. Endpoints
 
 ### `/api/states`
 
-Returns the list of states with their statuses.
+Returns the list of regions with their statuses.
 
 ```yaml
 # $ curl https://alerts.dun.ai/api/states -H "X-API-Key: yourApiKey34421337"
@@ -76,6 +80,76 @@ event: ping
 data: null
 
 # ...
+```
+
+# B. TCP Mode
+
+If you want to use this API in embedded systems - e.g. Arduino or ESP8266, you might prefer a more lightweight protocol instead of HTTP.
+This is why we offer a simple TCP interface.
+
+TCP-server is running on the same address on port `1024`.
+
+## B1. Packet structure
+
+All messages from server have the following format:
+
+```sh
+PacketType:Data\n
+```
+
+Every packet to and from server must end with an ASCII line break (`\n`).
+
+| Packet type | Description                                                                | Data                                                                                                                 |
+| :--------:  | :------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------- |
+| `a`         | auth packet, contains authentication result                                | `ok`, `timeout` or `wrong_api_key`                                                                                   |
+| `p`         | ping packet, server sends this every 15 seconds                            | Random number in range [0;10000)                                                                                     |
+| `s`         | state packet, contains information about air raid alert in specific region | Region number and air raid alert value. E.g. during air raid alert activation in Lviv region this will contain `12=1` |
+
+## B2. Communication protocol
+
+1. Client connects and sends its API key (ASCII encoding) within 3 seconds:
+
+    ```
+    yourApiKey34421337
+    ```
+
+    This is the only packet that client sends to the server.
+
+2. Server sends auth packet which tells whether authentication was successful.
+
+    ```
+    a:ok
+    ```
+
+    If authentication has failed, error code will be provided instead of `ok` (see previous section).
+
+3. Server initially sends 1 state packet for each region.
+
+4. Server periodically sends ping packets (every 15 seconds).
+
+5. During air raid alert activation or deactivation, server sends state packet.
+
+Sample TCP session (prefix `>` means serverbound, `<` means clientbound, `#` denotes comments):
+
+```js
+> yourApiKey34421337     # Client sends API key
+< a:ok                   # Authentication successful
+< s:1=0                  # Initial data about 25 regions
+< s:2=0
+< s:3=0
+...                      # (20 lines skipped for brevity)
+< s:24=0
+< s:25=0
+< p:1241                 # Пінг-пакет
+< p:2508                 # ...
+< p:1902
+< p:9028
+< s:12=1                 # Air raid alert in Lviv region!
+< p:3819
+< p:9873
+< s:12=0                 # Air raid alert in Lviv region has been canceled.
+< p:8321                 # Ping packet
+< p:3985                 # ...
 ```
 
 ## Use the source, Luke

@@ -1,4 +1,5 @@
 ECR_URL := 193635214029.dkr.ecr.eu-central-1.amazonaws.com/raid
+ARGS :=
 
 all: init run
 
@@ -9,7 +10,7 @@ generate:
 	go generate .
 
 run:
-	go run .
+	go run . ${ARGS}
 
 lint:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest

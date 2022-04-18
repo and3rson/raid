@@ -117,7 +117,7 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 	}
 
 	apiMux.Use(handlers.CORS(
-		handlers.AllowedHeaders([]string{"X-API-Key"}),
+		handlers.AllowedHeaders([]string{"X-API-Key", "Content-Type", "Cache-Control"}),
 		handlers.AllowedMethods([]string{"GET", "HEAD", "OPTIONS"}),
 		handlers.AllowedOrigins([]string{"*"}),
 	))
