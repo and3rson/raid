@@ -34,7 +34,7 @@ If you exceed the above limits you will be throttled with a HTTP 429 response.
 Returns the list of regions with their statuses.
 
 ```yaml
-# $ curl https://alerts.dun.ai/api/states -H "X-API-Key: yourApiKey34421337"
+# $ curl https://alerts.com.ua/api/states -H "X-API-Key: yourApiKey34421337"
 
 {
   "states": [
@@ -62,7 +62,7 @@ Returns the list of regions with their statuses.
 [SSE](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) endpoint which yields alert events in real time.
 
 ```yaml
-# $ curl https://alerts.dun.ai/api/states/live -H "X-API-Key: yourApiKey34421337"
+# $ curl https://alerts.com.ua/api/states/live -H "X-API-Key: yourApiKey34421337"
 
 event: hello
 data: null

@@ -34,7 +34,7 @@
 Повертає список областей з їхніми статусами.
 
 ```yaml
-# $ curl https://alerts.com.ua.api/states -H "X-API-Key: yourApiKey34421337"
+# $ curl https://alerts.com.ua/api/states -H "X-API-Key: yourApiKey34421337"
 
 {
   "states": [
@@ -62,7 +62,7 @@
 [SSE](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)-ендпоінт, який генерує події в режимі реального часу.
 
 ```yaml
-# $ curl https://alerts.com.ua.api/states/live -H "X-API-Key: yourApiKey34421337"
+# $ curl https://alerts.com.ua/api/states/live -H "X-API-Key: yourApiKey34421337"
 
 event: hello
 data: null
