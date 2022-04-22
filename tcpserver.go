@@ -127,7 +127,7 @@ func (t *TCPServer) HandleConn(ctx context.Context, conn net.Conn) {
 		}
 	}
 
-	events := t.updates.Subscribe()
+	events := t.updates.Subscribe(FilterAll[State])
 	defer func() {
 		t.updates.Unsubscribe(events)
 	}()

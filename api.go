@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io/fs"
 	"net/http"
+	"strconv"
 	"sync"
 	"time"
 
@@ -32,6 +33,11 @@ var indexEnContent []byte
 
 type StatesResponse struct {
 	States     []State   `json:"states"`
+	LastUpdate time.Time `json:"last_update"`
+}
+
+type StateResponse struct {
+	*State     `json:"state"`
 	LastUpdate time.Time `json:"last_update"`
 }
 
@@ -138,28 +144,68 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 		})
 	})
 
-	apiMux.HandleFunc("/states", func(rw http.ResponseWriter, r *http.Request) {
+	statesHandleFunc := func(rw http.ResponseWriter, r *http.Request) {
+		id := 0
+		if idStr, ok := mux.Vars(r)["id"]; ok {
+			id, _ = strconv.Atoi(idStr)
+		}
+
 		rw.Header().Add("Content-Type", "application/json")
 		rw.WriteHeader(200)
 		enc := json.NewEncoder(rw)
-		response := StatesResponse{
-			a.updaterState.States,
-			a.updaterState.LastUpdate,
+
+		if id != 0 {
+			for _, state := range a.updaterState.States {
+				if state.ID == id {
+					_ = enc.Encode(StateResponse{
+						&state,
+						a.updaterState.LastUpdate,
+					})
+
+					return
+				}
+			}
+
+			_ = enc.Encode(StateResponse{
+				nil,
+				a.updaterState.LastUpdate,
+			})
+		} else {
+			_ = enc.Encode(StatesResponse{
+				a.updaterState.States,
+				a.updaterState.LastUpdate,
+			})
 		}
-		_ = enc.Encode(response)
-	})
-	apiMux.HandleFunc("/states/live", func(rw http.ResponseWriter, r *http.Request) {
-		log.Infof("api: subscribe to events")
-		events := a.updates.Subscribe()
+	}
+	apiMux.HandleFunc("/states", statesHandleFunc)
+	apiMux.HandleFunc("/states/{id:[0-9]+}", statesHandleFunc)
+
+	liveHandleFunc := func(rw http.ResponseWriter, r *http.Request) {
+		id := 0
+		if idStr, ok := mux.Vars(r)["id"]; ok {
+			id, _ = strconv.Atoi(idStr)
+		}
+
+		if id == 0 {
+			log.Info("api: subscribe to events")
+		} else {
+			log.Infof("api: subscribe to events for state %d", id)
+		}
+
+		events := a.updates.Subscribe(func(s *State) bool {
+			return id == 0 || id == s.ID
+		})
 		defer func() {
 			log.Infof("api: unsubscribe from events")
 			a.updates.Unsubscribe(events)
 		}()
 		rw.Header().Set("Content-Type", "text/event-stream")
 		sse := NewSSEEncoder(rw)
+
 		if err := sse.Write("hello", nil); err != nil {
 			log.Errorf("api: send SSE hello: %s", err)
 		}
+
 		for {
 			select {
 			case state := <-events:
@@ -178,7 +224,10 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 				return
 			}
 		}
-	})
+	}
+	apiMux.HandleFunc("/states/live", liveHandleFunc)
+	apiMux.HandleFunc("/states/live/{id:[0-9]+}", liveHandleFunc)
+
 	webMux.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
 		rw.Header().Add("Content-Type", "text/html; charset=utf-8")
 		rw.WriteHeader(200)

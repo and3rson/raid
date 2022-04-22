@@ -53,7 +53,27 @@
 	  "changed": "2022-04-05T06:13:06+03:00"
 	},
 	# ...
-  ]
+  ],
+  "last_update": "2022-04-05T06:15:10.333210918+03:00"
+}
+```
+
+### `/api/state/<ID>`
+
+Повертає область та статус тривоги за її ID.
+
+```yaml
+# $ curl https://alerts.com.ua/api/states/12 -H "X-API-Key: yourApiKey34421337"
+
+{
+  "state": {
+	"id": 12,
+	"name": "Львівська область",
+    "name_en": "Lviv oblast",
+	"alert": false,
+	"changed": "2022-04-05T06:13:12+03:00"
+  },
+  "last_update": "2022-04-05T06:15:10.333210918+03:00"
 }
 ```
 
