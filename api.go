@@ -200,6 +200,7 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 			a.updates.Unsubscribe(events)
 		}()
 		rw.Header().Set("Content-Type", "text/event-stream")
+		rw.Header().Set("Cache-Control", "no-cache")
 		sse := NewSSEEncoder(rw)
 
 		if err := sse.Write("hello", nil); err != nil {
@@ -214,7 +215,7 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 
 					return
 				}
-			case <-time.After(15 * time.Second):
+			case <-time.After(5 * time.Second):
 				if err := sse.Write("ping", nil); err != nil {
 					log.Errorf("api: send SSE ping: %s", err)
 

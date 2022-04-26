@@ -20,7 +20,7 @@ func (e *SSEEncoder) Write(event string, data interface{}) error {
 		return fmt.Errorf("sse: encode event data: %w", err)
 	}
 
-	if _, err := e.writer.Write([]byte(fmt.Sprintf("event: %s\ndata: %s\n\n", event, encoded))); err != nil {
+	if _, err := e.writer.Write([]byte(fmt.Sprintf("event: %s\r\ndata: %s\r\n\r\n", event, encoded))); err != nil {
 		return fmt.Errorf("sse: write event data: %w", err)
 	}
 
