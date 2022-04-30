@@ -81,6 +81,8 @@
 
 [SSE](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)-ендпоінт, який генерує події в режимі реального часу.
 
+Приклад клієнта: <https://codesandbox.io/s/goofy-elgamal-mkdkzv?file=/src/App.js>
+
 ```yaml
 # $ curl https://alerts.com.ua/api/states/live -H "X-API-Key: yourApiKey34421337"
 
