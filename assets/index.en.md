@@ -109,7 +109,7 @@ data: null
 If you want to use this API in embedded systems - e.g. Arduino or ESP8266, you might prefer a more lightweight protocol instead of HTTP.
 This is why we offer a simple TCP interface.
 
-TCP-server is running on the same address on port `1024`.
+TCP-server is running on `tcp.alerts.com.ua` on port `1024`.
 
 ## B1. Packet structure
 
@@ -162,7 +162,7 @@ Sample TCP session (prefix `>` means serverbound, `<` means clientbound, `#` den
 ...                      # (20 lines skipped for brevity)
 < s:24=0
 < s:25=0
-< p:1241                 # Пінг-пакет
+< p:1241                 # Ping packet
 < p:2508                 # ...
 < p:1902
 < p:9028
