@@ -137,6 +137,12 @@ Every packet to and from server must end with an ASCII line break (`\n`).
 
     This is the only packet that client sends to the server.
 
+    You can also request updates for a single region only by appending a comma-separated region number to your key, e. g.:
+
+    ```
+    yourApiKey34421337,12
+    ```
+
 2. Server sends auth packet which tells whether authentication was successful.
 
     ```

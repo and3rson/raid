@@ -2,9 +2,9 @@ package main
 
 type FilterFunc[T interface{}] func(T) bool
 
-func FilterAll[T interface{}](*T) bool {
-	return true
-}
+// func FilterAll[T interface{}](*T) bool {
+// 	return true
+// }
 
 type Topic[T interface{}] struct {
 	channels map[chan T]FilterFunc[T]

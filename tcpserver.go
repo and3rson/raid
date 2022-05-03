@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math/rand"
 	"net"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -91,7 +92,14 @@ func (t *TCPServer) HandleConn(ctx context.Context, conn net.Conn) {
 		return
 	}
 
-	apiKey := strings.TrimSpace(string(buf[:n]))
+	parts := strings.Split(strings.TrimSpace(string(buf[:n])), ",")
+	apiKey := parts[0]
+
+	id := 0
+	if len(parts) > 1 {
+		id, _ = strconv.Atoi(parts[1])
+	}
+
 	authSuccess := false
 
 	for _, other := range t.apiKeys {
@@ -115,19 +123,24 @@ func (t *TCPServer) HandleConn(ctx context.Context, conn net.Conn) {
 	}
 
 	for _, state := range t.updaterState.States {
-		alert := 0
-		if state.Alert {
-			alert = 1
-		}
+		if id == 0 || id == state.ID {
+			alert := 0
+			if state.Alert {
+				alert = 1
+			}
 
-		if _, err := conn.Write([]byte(fmt.Sprintf("s:%d=%d\n", state.ID, alert))); err != nil {
-			log.Errorf("tcpserver: write state: %v", err)
+			if _, err := conn.Write([]byte(fmt.Sprintf("s:%d=%d\n", state.ID, alert))); err != nil {
+				log.Errorf("tcpserver: write state: %v", err)
 
-			return
+				return
+			}
 		}
 	}
 
-	events := t.updates.Subscribe(FilterAll[State])
+	events := t.updates.Subscribe(func(s *State) bool {
+		return id == 0 || id == s.ID
+	})
+
 	defer func() {
 		t.updates.Unsubscribe(events)
 	}()
