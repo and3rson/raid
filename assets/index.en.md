@@ -10,6 +10,10 @@ Only regions are supported at this moment - 24 total plus Kyiv city. Crimea is a
 
 Service works in two modes: HTTP and TCP.
 
+You can also use our static map: <https://alerts.com.ua/map.png>
+
+![Карта Тривог](/map.png){width="400"}
+
 # A. HTTP mode
 
 ## A1. Authentication

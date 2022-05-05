@@ -19,7 +19,11 @@ require (
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
+	github.com/srwiley/oksvg v0.0.0-20220128195007-1f435e4c2b44 // indirect
+	github.com/srwiley/rasterx v0.0.0-20220128185129-2efea2b9ea41 // indirect
 	github.com/stretchr/testify v1.6.1 // indirect
+	golang.org/x/image v0.0.0-20211028202545-6944b10bf410 // indirect
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
+	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 )

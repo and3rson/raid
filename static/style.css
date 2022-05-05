@@ -290,3 +290,10 @@ table tr.header {
 table th, table td {
     padding: 0.5rem;
 }
+figure img {
+    display: block;
+    margin: 0 auto;
+}
+figure figcaption {
+    text-align: center;
+}

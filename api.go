@@ -51,6 +51,7 @@ type APIServer struct {
 	apiKeysMap        map[string]bool
 	updaterState      *UpdaterState
 	updates           *Topic[*State]
+	mapData           *MapData
 	addrRateLimiter   throttled.RateLimiter
 	apiKeyRateLimiter throttled.RateLimiter
 	staticDirFS       fs.FS
@@ -73,7 +74,7 @@ func CreateRateLimiter(perSec int, burst int) throttled.RateLimiter {
 	return rateLimiter
 }
 
-func NewAPIServer(port uint16, apiKeys []string, updaterState *UpdaterState, updates *Topic[*State]) *APIServer {
+func NewAPIServer(port uint16, apiKeys []string, updaterState *UpdaterState, updates *Topic[*State], mapData *MapData) *APIServer {
 	apiKeysMap := make(map[string]bool)
 	for _, key := range apiKeys {
 		apiKeysMap[key] = true
@@ -90,6 +91,7 @@ func NewAPIServer(port uint16, apiKeys []string, updaterState *UpdaterState, upd
 		apiKeysMap:        apiKeysMap,
 		updaterState:      updaterState,
 		updates:           updates,
+		mapData:           mapData,
 		addrRateLimiter:   CreateRateLimiter(10, 10),
 		apiKeyRateLimiter: CreateRateLimiter(100, 100),
 		staticDirFS:       staticDirFS,
@@ -243,6 +245,11 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 		rw.Header().Add("Content-Type", "text/html; charset=utf-8")
 		rw.WriteHeader(200)
 		_, _ = rw.Write(indexEnContent)
+	})
+	webMux.HandleFunc("/map.png", func(rw http.ResponseWriter, r *http.Request) {
+		rw.Header().Add("Content-Type", a.mapData.ContentType)
+		rw.WriteHeader(200)
+		_, _ = rw.Write(a.mapData.Bytes)
 	})
 	webMux.PathPrefix("/").Handler(http.FileServer(http.FS(a.staticDirFS)))
 

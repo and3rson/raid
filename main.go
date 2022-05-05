@@ -30,12 +30,14 @@ func main() {
 	}
 
 	updater := NewUpdater(settings.Timezone, settings.BacklogSize, updaterState)
-	apiServer := NewAPIServer(10101, settings.APIKeys, updaterState, updater.Updates)
+	mapGenerator := NewMapGenerator(updaterState, updater.Updates)
+	apiServer := NewAPIServer(10101, settings.APIKeys, updaterState, updater.Updates, mapGenerator.MapData)
 	tcpServer := NewTCPServer(1024, settings.APIKeys, updaterState, updater.Updates)
 
 	go updater.Run(ctx, wg, errch)
 	go apiServer.Run(ctx, wg, errch)
 	go tcpServer.Run(ctx, wg, errch)
+	go mapGenerator.Run(ctx, wg, errch)
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
