@@ -1,4 +1,4 @@
-package main
+package raid
 
 import (
 	"context"
@@ -14,7 +14,7 @@ type Updater struct {
 	timezone     *time.Location
 	backlogSize  int
 	updaterState *UpdaterState
-	Updates      *Topic[*State]
+	Updates      *Topic[Update]
 }
 
 type UpdaterState struct {
@@ -29,6 +29,11 @@ type State struct {
 	NameEn  string     `json:"name_en"`
 	Alert   bool       `json:"alert"`
 	Changed *time.Time `json:"changed"`
+}
+
+type Update struct {
+	IsFresh bool
+	State   State
 }
 
 func NewUpdater(timezone *time.Location, backlogSize int, updaterState *UpdaterState) *Updater {
@@ -66,11 +71,13 @@ func NewUpdater(timezone *time.Location, backlogSize int, updaterState *UpdaterS
 		timezone,
 		backlogSize,
 		updaterState,
-		NewTopic[*State](),
+		NewTopic[Update](),
 	}
 }
 
 func (u *Updater) Run(ctx context.Context, wg *sync.WaitGroup, errch chan error) {
+	defer log.Debug("updater: exit")
+
 	defer wg.Done()
 	wg.Add(1)
 
@@ -122,8 +129,6 @@ func (u *Updater) Run(ctx context.Context, wg *sync.WaitGroup, errch chan error)
 			log.Infof("updater: fetch %d new messages", len(messages))
 			u.updaterState.LastMessageID = messages[len(messages)-1].ID
 			u.ProcessMessages(ctx, messages, true)
-
-			wait = time.After(0)
 		} else {
 			wait = time.After(2 * time.Second)
 		}
@@ -136,6 +141,12 @@ func (u *Updater) ProcessMessages(ctx context.Context, messages []Message, isFre
 			on    bool
 			state *State
 		)
+
+		if len(msg.Text) < 2 {
+			log.Debugf("updater: not enough text in message: %v", msg.Text)
+
+			continue
+		}
 
 		sentence := msg.Text[1]
 
@@ -161,9 +172,10 @@ func (u *Updater) ProcessMessages(ctx context.Context, messages []Message, isFre
 			state.Changed = &t
 			state.Alert = on
 			log.Debugf("updater: new state: %s (id=%d) -> %v", state.Name, state.ID, on)
-			if isFresh {
-				u.Updates.Broadcast(state)
-			}
+			u.Updates.Broadcast(Update{
+				IsFresh: isFresh,
+				State:   *state,
+			})
 		}
 	}
 }

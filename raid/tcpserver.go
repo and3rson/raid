@@ -1,4 +1,4 @@
-package main
+package raid
 
 import (
 	"context"
@@ -18,10 +18,10 @@ type TCPServer struct {
 	port         uint16
 	apiKeys      []string
 	updaterState *UpdaterState
-	updates      *Topic[*State]
+	updates      *Topic[Update]
 }
 
-func NewTCPServer(port uint16, apiKeys []string, updaterState *UpdaterState, updates *Topic[*State]) *TCPServer {
+func NewTCPServer(port uint16, apiKeys []string, updaterState *UpdaterState, updates *Topic[Update]) *TCPServer {
 	return &TCPServer{
 		port:         port,
 		apiKeys:      apiKeys,
@@ -31,6 +31,8 @@ func NewTCPServer(port uint16, apiKeys []string, updaterState *UpdaterState, upd
 }
 
 func (t *TCPServer) Run(ctx context.Context, wg *sync.WaitGroup, errch chan error) {
+	defer log.Debug("mapgenerator: exit")
+
 	defer wg.Done()
 	wg.Add(1)
 
@@ -137,8 +139,8 @@ func (t *TCPServer) HandleConn(ctx context.Context, conn net.Conn) {
 		}
 	}
 
-	events := t.updates.Subscribe(func(s *State) bool {
-		return id == 0 || id == s.ID
+	events := t.updates.Subscribe("tcpserver", func(u Update) bool {
+		return u.IsFresh && (id == 0 || id == u.State.ID)
 	})
 
 	defer func() {
@@ -149,13 +151,18 @@ func (t *TCPServer) HandleConn(ctx context.Context, conn net.Conn) {
 		select {
 		case <-ctx.Done():
 			return
-		case state := <-events:
+		case event, ok := <-events:
+			if !ok {
+				return
+			}
+
 			alert := 0
-			if state.Alert {
+
+			if event.State.Alert {
 				alert = 1
 			}
 
-			if _, err := conn.Write([]byte(fmt.Sprintf("s:%d=%d\n", state.ID, alert))); err != nil {
+			if _, err := conn.Write([]byte(fmt.Sprintf("s:%d=%d\n", event.State.ID, alert))); err != nil {
 				log.Errorf("tcpserver: write state: %v", err)
 
 				return

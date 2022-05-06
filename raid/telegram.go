@@ -1,4 +1,4 @@
-package main
+package raid
 
 import (
 	"bytes"
@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/andybalholm/cascadia"
+	log "github.com/sirupsen/logrus"
 	"golang.org/x/net/html"
 )
 
@@ -78,21 +79,7 @@ func getAttr(node *html.Node, key string) string {
 	return ""
 }
 
-func (c *ChannelClient) FetchMessages(ctx context.Context, before int64) ([]Message, error) {
-	messages := []Message{}
-	url := fmt.Sprintf(URLPattern, c.channel)
-
-	if before != 0 {
-		url = fmt.Sprintf("%s?before=%d", url, before)
-	}
-
-	req, err := http.NewRequestWithContext(ctx, "POST", url, nil)
-	if err != nil {
-		return nil, fmt.Errorf("telegram: create request: %w", err)
-	}
-
-	req.Header.Add("X-Requested-With", "XMLHttpRequest")
-
+func (c *ChannelClient) fetchAndParse(req *http.Request) (*html.Node, error) {
 	resp, err := c.client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("telegram: post request: %w", err)
@@ -108,6 +95,44 @@ func (c *ChannelClient) FetchMessages(ctx context.Context, before int64) ([]Mess
 	root, err := html.Parse(bytes.NewReader([]byte(data)))
 	if err != nil {
 		return nil, fmt.Errorf("telegram: parse response as HTML: %w", err)
+	}
+
+	return root, nil
+}
+
+func (c *ChannelClient) FetchMessages(ctx context.Context, before int64) ([]Message, error) {
+	messages := []Message{}
+	url := fmt.Sprintf(URLPattern, c.channel)
+
+	if before != 0 {
+		url = fmt.Sprintf("%s?before=%d", url, before)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "POST", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("telegram: create request: %w", err)
+	}
+
+	req.Header.Add("X-Requested-With", "XMLHttpRequest")
+
+	log.Debugf("POST %s", req.URL)
+
+	attempts := 5
+
+	var root *html.Node
+
+	for {
+		if root, err = c.fetchAndParse(req); err == nil {
+			break
+		}
+
+		log.Warnf("%v, will retry after 10s", err)
+		<-time.After(time.Second * 10)
+
+		attempts--
+		if attempts == 0 {
+			return nil, err
+		}
 	}
 
 	nodes := MessagesSel.MatchAll(root)
@@ -154,6 +179,8 @@ func (c *ChannelClient) FetchLast(ctx context.Context, count int) ([]Message, er
 		messages = append(prevMessages, messages...)
 
 		oldestID = prevMessages[0].ID
+
+		<-time.After(time.Millisecond * 50)
 	}
 
 	return messages, nil
@@ -176,6 +203,8 @@ func (c *ChannelClient) FetchNewer(ctx context.Context, after int64) ([]Message,
 
 		messages = append(prevMessages, messages...)
 		oldestID = prevMessages[0].ID
+
+		<-time.After(time.Millisecond * 50)
 	}
 
 	result := []Message{}

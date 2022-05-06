@@ -8,11 +8,13 @@ import (
 	"syscall"
 	_ "time/tzdata"
 
+	"github.com/and3rson/raid/raid"
+
 	log "github.com/sirupsen/logrus"
 )
 
 func main() {
-	settings := MustLoadSettings()
+	settings := raid.MustLoadSettings()
 
 	if settings.Debug {
 		log.SetLevel(log.DebugLevel)
@@ -20,24 +22,26 @@ func main() {
 
 	ctx, cancel := context.WithCancel(context.Background())
 	wg := &sync.WaitGroup{}
-	errch := make(chan error, 3)
+	errch := make(chan error, 32)
 
-	updaterState := &UpdaterState{}
+	updaterState := &raid.UpdaterState{}
 
-	persistence, err := NewPersistence(updaterState, "./data/app_state.json")
+	persistence, err := raid.NewPersistence(updaterState, "./data/app_state.json")
 	if err != nil {
 		log.Fatalf("main: create app state persistence: %v", err)
 	}
 
-	updater := NewUpdater(settings.Timezone, settings.BacklogSize, updaterState)
-	mapGenerator := NewMapGenerator(updaterState, updater.Updates)
-	apiServer := NewAPIServer(10101, settings.APIKeys, updaterState, updater.Updates, mapGenerator.MapData)
-	tcpServer := NewTCPServer(1024, settings.APIKeys, updaterState, updater.Updates)
+	updater := raid.NewUpdater(settings.Timezone, settings.BacklogSize, updaterState)
+	mapGenerator := raid.NewMapGenerator(updaterState, updater.Updates)
+	apiServer := raid.NewAPIServer(10101, settings.APIKeys, updaterState, updater.Updates, mapGenerator.MapData)
+	tcpServer := raid.NewTCPServer(1024, settings.APIKeys, updaterState, updater.Updates)
+	delorean := raid.NewDelorean("history", updater.Updates)
 
 	go updater.Run(ctx, wg, errch)
 	go apiServer.Run(ctx, wg, errch)
 	go tcpServer.Run(ctx, wg, errch)
 	go mapGenerator.Run(ctx, wg, errch)
+	go delorean.Run(ctx, wg, errch)
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)

@@ -10,7 +10,7 @@ generate:
 	go generate .
 
 run:
-	go run . ${ARGS}
+	go run ./cmd/raid/main.go ${ARGS}
 
 lint:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest

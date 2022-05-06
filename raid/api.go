@@ -1,4 +1,4 @@
-package main
+package raid
 
 import (
 	"context"
@@ -50,7 +50,7 @@ type APIServer struct {
 	apiKeys           []string
 	apiKeysMap        map[string]bool
 	updaterState      *UpdaterState
-	updates           *Topic[*State]
+	updates           *Topic[Update]
 	mapData           *MapData
 	addrRateLimiter   throttled.RateLimiter
 	apiKeyRateLimiter throttled.RateLimiter
@@ -74,7 +74,7 @@ func CreateRateLimiter(perSec int, burst int) throttled.RateLimiter {
 	return rateLimiter
 }
 
-func NewAPIServer(port uint16, apiKeys []string, updaterState *UpdaterState, updates *Topic[*State], mapData *MapData) *APIServer {
+func NewAPIServer(port uint16, apiKeys []string, updaterState *UpdaterState, updates *Topic[Update], mapData *MapData) *APIServer {
 	apiKeysMap := make(map[string]bool)
 	for _, key := range apiKeys {
 		apiKeysMap[key] = true
@@ -194,8 +194,8 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 			log.Infof("api: subscribe to events for state %d", id)
 		}
 
-		events := a.updates.Subscribe(func(s *State) bool {
-			return id == 0 || id == s.ID
+		events := a.updates.Subscribe("api", func(u Update) bool {
+			return u.IsFresh && (id == 0 || id == u.State.ID)
 		})
 		defer func() {
 			log.Infof("api: unsubscribe from events")
@@ -211,8 +211,12 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 
 		for {
 			select {
-			case state := <-events:
-				if err := sse.Write("update", PollResponse{*state}); err != nil {
+			case event, ok := <-events:
+				if !ok {
+					return
+				}
+
+				if err := sse.Write("update", PollResponse{event.State}); err != nil {
 					log.Errorf("api: send SSE update: %s", err)
 
 					return
@@ -257,6 +261,8 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 }
 
 func (a *APIServer) Run(ctx context.Context, wg *sync.WaitGroup, errch chan error) {
+	defer log.Debug("api: exit")
+
 	defer wg.Done()
 	wg.Add(1)
 

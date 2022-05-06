@@ -1,4 +1,4 @@
-package main
+package raid
 
 import (
 	"bytes"
@@ -28,12 +28,12 @@ type MapData struct {
 
 type MapGenerator struct {
 	updaterState *UpdaterState
-	updates      *Topic[*State]
+	updates      *Topic[Update]
 	mapTemplate  *template.Template
 	MapData      *MapData
 }
 
-func NewMapGenerator(updaterState *UpdaterState, updates *Topic[*State]) *MapGenerator {
+func NewMapGenerator(updaterState *UpdaterState, updates *Topic[Update]) *MapGenerator {
 	mapTemplate, err := template.New("maptemplate").Parse(mapTemplateStr)
 	if err != nil {
 		log.Fatalf("mapgenerator: parse map template: %s", err)
@@ -48,15 +48,23 @@ func NewMapGenerator(updaterState *UpdaterState, updates *Topic[*State]) *MapGen
 }
 
 func (g *MapGenerator) Run(ctx context.Context, wg *sync.WaitGroup, errch chan error) {
+	defer log.Debug("mapgenerator: exit")
+
 	defer wg.Done()
 	wg.Add(1)
 
-	events := g.updates.Subscribe(FilterAll[State])
+	events := g.updates.Subscribe("mapgenerator", func(u Update) bool {
+		return u.IsFresh
+	})
 	defer g.updates.Unsubscribe(events)
 
 	for {
 		select {
-		case <-events:
+		case _, ok := <-events:
+			if !ok {
+				return
+			}
+
 			if err := g.generateMap(g.updaterState); err != nil {
 				errch <- fmt.Errorf("mapgenerator: regenerate map: %s", err)
 
