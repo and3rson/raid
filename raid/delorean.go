@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"sync"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3" // SQLite3 driver
 	log "github.com/sirupsen/logrus"
@@ -16,30 +17,32 @@ type Delorean struct {
 	updates       *Topic[Update]
 }
 
+type Record struct {
+	ID      int       `json:"id"`
+	Date    time.Time `json:"date"`
+	StateID int       `json:"state_id"`
+	Alert   bool      `json:"alert"`
+}
+
 func NewDelorean(dbname string, updates *Topic[Update]) *Delorean {
 	db, err := sql.Open("sqlite3", fmt.Sprintf("./data/%s.sqlite", dbname))
 	if err != nil {
 		log.Fatalf("delorean: open DB: %s", err)
 	}
 
-	stmt, err := db.Prepare(`
+	if _, err := db.Exec(`
 		CREATE TABLE IF NOT EXISTS events (
 			id integer NOT NULL PRIMARY KEY AUTOINCREMENT,
 			date timestamp NOT NULL,
-			state integer NOT NULL,
+			state_id integer NOT NULL,
 			alert bool NOT NULL
 		);
-	`)
-	if err != nil {
-		log.Fatalf("delorean: prepare schema mutation: %s", err)
-	}
-
-	if _, err := stmt.Exec(); err != nil {
+	`); err != nil {
 		log.Fatalf("delorean: execute schema mutation: %s", err)
 	}
 
 	addRecordStmt, err := db.Prepare(`
-		INSERT INTO events (date, state, alert)
+		INSERT INTO events (date, state_id, alert)
 		VALUES (?, ?, ?)
 	`)
 	if err != nil {
@@ -55,6 +58,27 @@ func (d *Delorean) addRecord(state State) error {
 	}
 
 	return nil
+}
+
+func (d *Delorean) ListRecords() ([]Record, error) {
+	rows, err := d.db.Query("SELECT * FROM events ORDER BY id ASC")
+	if err != nil {
+		return nil, fmt.Errorf("delorean: list records: %v", err)
+	}
+	defer rows.Close()
+
+	result := []Record{}
+
+	for rows.Next() {
+		record := Record{}
+		if err := rows.Scan(&record.ID, &record.Date, &record.StateID, &record.Alert); err != nil {
+			return nil, fmt.Errorf("delorean: scan row: %v", err)
+		}
+
+		result = append(result, record)
+	}
+
+	return result, nil
 }
 
 func (d *Delorean) Run(ctx context.Context, wg *sync.WaitGroup, errch chan error) {

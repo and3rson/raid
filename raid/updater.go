@@ -86,6 +86,8 @@ func (u *Updater) Run(ctx context.Context, wg *sync.WaitGroup, errch chan error)
 	var wait <-chan time.Time
 
 	if u.updaterState.LastMessageID == 0 {
+		log.Infof("updater: no previous ID, will fetch backlog")
+
 		messages, err := cc.FetchLast(ctx, u.backlogSize)
 		if err != nil {
 			errch <- fmt.Errorf("updater: fetch initial batch: %w", err)

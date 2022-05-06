@@ -52,6 +52,7 @@ type APIServer struct {
 	updaterState      *UpdaterState
 	updates           *Topic[Update]
 	mapData           *MapData
+	listRecordsFunc   func() ([]Record, error)
 	addrRateLimiter   throttled.RateLimiter
 	apiKeyRateLimiter throttled.RateLimiter
 	staticDirFS       fs.FS
@@ -74,7 +75,10 @@ func CreateRateLimiter(perSec int, burst int) throttled.RateLimiter {
 	return rateLimiter
 }
 
-func NewAPIServer(port uint16, apiKeys []string, updaterState *UpdaterState, updates *Topic[Update], mapData *MapData) *APIServer {
+func NewAPIServer(
+	port uint16, apiKeys []string, updaterState *UpdaterState, updates *Topic[Update], mapData *MapData,
+	listRecordsFunc func() ([]Record, error),
+) *APIServer {
 	apiKeysMap := make(map[string]bool)
 	for _, key := range apiKeys {
 		apiKeysMap[key] = true
@@ -92,6 +96,7 @@ func NewAPIServer(port uint16, apiKeys []string, updaterState *UpdaterState, upd
 		updaterState:      updaterState,
 		updates:           updates,
 		mapData:           mapData,
+		listRecordsFunc:   listRecordsFunc,
 		addrRateLimiter:   CreateRateLimiter(10, 10),
 		apiKeyRateLimiter: CreateRateLimiter(100, 100),
 		staticDirFS:       staticDirFS,
@@ -234,6 +239,42 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 	}
 	apiMux.HandleFunc("/states/live", liveHandleFunc)
 	apiMux.HandleFunc("/states/live/{id:[0-9]+}", liveHandleFunc)
+
+	const historyCooldown = 60 * time.Second
+
+	historyCallsPerKey := make(map[string]time.Time)
+
+	apiMux.HandleFunc("/history", func(rw http.ResponseWriter, r *http.Request) {
+		key := r.Header.Get("x-api-key")
+		lastCall, _ := historyCallsPerKey[key]
+		if time.Since(lastCall) < historyCooldown {
+			rw.Header().Add("Content-Type", "application/json")
+			rw.WriteHeader(429)
+			enc := json.NewEncoder(rw)
+			_ = enc.Encode(map[string]string{
+				"error": fmt.Sprintf("Please wait %d seconds", int(time.Until(lastCall.Add(historyCooldown)).Seconds())),
+			})
+
+			return
+		}
+		historyCallsPerKey[key] = time.Now()
+
+		records, err := a.listRecordsFunc()
+		if err != nil {
+			log.Errorf("api: list records: %v", err)
+			rw.Header().Add("Content-Type", "text/html; charset=utf-8")
+			rw.WriteHeader(500)
+			enc := json.NewEncoder(rw)
+			_ = enc.Encode(map[string]string{"error": "Internal server error while fetching data from DB"})
+
+			return
+		}
+
+		rw.Header().Add("Content-Type", "text/html; charset=utf-8")
+		rw.WriteHeader(200)
+		enc := json.NewEncoder(rw)
+		_ = enc.Encode(records)
+	})
 
 	webMux.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
 		rw.Header().Add("Content-Type", "text/html; charset=utf-8")

@@ -115,7 +115,7 @@ func (c *ChannelClient) FetchMessages(ctx context.Context, before int64) ([]Mess
 
 	req.Header.Add("X-Requested-With", "XMLHttpRequest")
 
-	log.Debugf("POST %s", req.URL)
+	// log.Debugf("POST %s", req.URL)
 
 	attempts := 5
 

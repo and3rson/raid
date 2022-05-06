@@ -33,9 +33,9 @@ func main() {
 
 	updater := raid.NewUpdater(settings.Timezone, settings.BacklogSize, updaterState)
 	mapGenerator := raid.NewMapGenerator(updaterState, updater.Updates)
-	apiServer := raid.NewAPIServer(10101, settings.APIKeys, updaterState, updater.Updates, mapGenerator.MapData)
-	tcpServer := raid.NewTCPServer(1024, settings.APIKeys, updaterState, updater.Updates)
 	delorean := raid.NewDelorean("history", updater.Updates)
+	apiServer := raid.NewAPIServer(10101, settings.APIKeys, updaterState, updater.Updates, mapGenerator.MapData, delorean.ListRecords)
+	tcpServer := raid.NewTCPServer(1024, settings.APIKeys, updaterState, updater.Updates)
 
 	go updater.Run(ctx, wg, errch)
 	go apiServer.Run(ctx, wg, errch)
