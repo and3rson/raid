@@ -113,11 +113,11 @@ we all know that Crimea is Ukraine.</p>
 href="https://alerts.com.ua/map.png"
 class="uri">https://alerts.com.ua/map.png</a></p>
 <figure>
-<img src="/map.png" width="400" alt="Карта Тривог" />
+<img src="/map.png" alt="Карта Тривог" />
 <figcaption aria-hidden="true">Карта Тривог</figcaption>
 </figure>
-<h1 id="a.-http-mode">A. HTTP mode</h1>
-<h2 id="a1.-authentication">A1. Authentication</h2>
+<h2 id="a.-http-mode">A. HTTP mode</h2>
+<h3 id="a1.-authentication">A1. Authentication</h3>
 <p>You will need a key to use this API.</p>
 <ul>
 <li>To request a key, please send me an email (<a href="mailto:a@dun.ai"
@@ -138,8 +138,8 @@ EventStream API</a> does not allow sending headers with requests.</li>
 </ul>
 <p>If you exceed the above limits you will be throttled with a HTTP 429
 response.</p>
-<h2 id="a2.-endpoints">A2. Endpoints</h2>
-<h3 id="apistates"><code>/api/states</code></h3>
+<h3 id="a2.-endpoints">A2. Endpoints</h3>
+<h4 id="apistates"><code>/api/states</code></h4>
 <p>Returns the list of regions with their statuses.</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># $ curl https://alerts.com.ua/api/states -H &quot;X-API-Key: yourApiKey34421337&quot;</span></span>
@@ -164,7 +164,7 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">],</span></span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">&quot;last_update&quot;</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2022-04-05T06:15:10.333210918+03:00&quot;</span></span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span></code></pre></div>
-<h3 id="apistateid"><code>/api/state/&lt;ID&gt;</code></h3>
+<h4 id="apistateid"><code>/api/state/&lt;ID&gt;</code></h4>
 <p>Returns status for single region.</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># $ curl https://alerts.com.ua/api/states/12 -H &quot;X-API-Key: yourApiKey34421337&quot;</span></span>
@@ -179,7 +179,7 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">},</span></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">&quot;last_update&quot;</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2022-04-05T06:15:10.333210918+03:00&quot;</span></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span></code></pre></div>
-<h3 id="apistateslive"><code>/api/states/live</code></h3>
+<h4 id="apistateslive"><code>/api/states/live</code></h4>
 <p><a
 href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">SSE</a>
 endpoint which yields alert events in real time.</p>
@@ -205,13 +205,16 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span><span class="kw">:</span><span class="at"> </span><span class="ch">null</span></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span></code></pre></div>
-<h1 id="b.-tcp-mode">B. TCP Mode</h1>
+<h2 id="b.-tcp-mode">B. TCP Mode</h2>
 <p>If you want to use this API in embedded systems - e.g. Arduino or
 ESP8266, you might prefer a more lightweight protocol instead of HTTP.
 This is why we offer a simple TCP interface.</p>
 <p>TCP-server is running on <code>tcp.alerts.com.ua</code> on port
 <code>1024</code>.</p>
-<h2 id="b1.-packet-structure">B1. Packet structure</h2>
+<p>Example project for ESP8266: <a
+href="https://wokwi.com/projects/330842127136195154"
+class="uri">https://wokwi.com/projects/330842127136195154</a></p>
+<h3 id="b1.-packet-structure">B1. Packet structure</h3>
 <p>All messages from server have the following format:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">PacketType:Data\n</span></span></code></pre></div>
 <p>Every packet to and from server must end with an ASCII line break
@@ -253,7 +256,7 @@ E.g. during air raid alert activation in Lviv region this will contain
 </tr>
 </tbody>
 </table>
-<h2 id="b2.-communication-protocol">B2. Communication protocol</h2>
+<h3 id="b2.-communication-protocol">B2. Communication protocol</h3>
 <ol type="1">
 <li><p>Client connects and sends its API key (ASCII encoding) within 3
 seconds:</p>
@@ -294,13 +297,13 @@ comments):</p>
 <span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> s<span class="op">:</span><span class="dv">12</span><span class="op">=</span><span class="dv">0</span>                 # Air raid alert <span class="kw">in</span> Lviv region has been canceled<span class="op">.</span></span>
 <span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">8321</span>                 # Ping packet</span>
 <span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">3985</span>                 # <span class="op">...</span></span></code></pre></div>
-<h2 id="use-the-source-luke">Use the source, Luke</h2>
+<h3 id="use-the-source-luke">Use the source, Luke</h3>
 <p>This thing was made by <a href="https://github.com/and3rson">Andrew
 Dunai</a>.</p>
 <p>Source code for this service can be found here: <a
 href="https://github.com/and3rson/raid"
 class="uri">https://github.com/and3rson/raid</a></p>
-<h2 id="but-why">But why?</h2>
+<h3 id="but-why">But why?</h3>
 <p>I support and preach the principles of open data and FOSS.</p>
 <p>I believe that everyone should be allowed to process any
 <strong>information which is publicly available</strong> in any ways

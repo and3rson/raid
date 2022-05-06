@@ -14,9 +14,9 @@ You can also use our static map: <https://alerts.com.ua/map.png>
 
 ![Карта Тривог](/map.png)
 
-# A. HTTP mode
+## A. HTTP mode
 
-## A1. Authentication
+### A1. Authentication
 
 You will need a key to use this API.
 
@@ -31,9 +31,9 @@ Please be aware that this API is rate-limited:
 
 If you exceed the above limits you will be throttled with a HTTP 429 response.
 
-## A2. Endpoints
+### A2. Endpoints
 
-### `/api/states`
+#### `/api/states`
 
 Returns the list of regions with their statuses.
 
@@ -62,7 +62,7 @@ Returns the list of regions with their statuses.
 }
 ```
 
-### `/api/state/<ID>`
+#### `/api/state/<ID>`
 
 Returns status for single region.
 
@@ -81,7 +81,7 @@ Returns status for single region.
 }
 ```
 
-### `/api/states/live`
+#### `/api/states/live`
 
 [SSE](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) endpoint which yields alert events in real time.
 
@@ -108,14 +108,16 @@ data: null
 # ...
 ```
 
-# B. TCP Mode
+## B. TCP Mode
 
 If you want to use this API in embedded systems - e.g. Arduino or ESP8266, you might prefer a more lightweight protocol instead of HTTP.
 This is why we offer a simple TCP interface.
 
 TCP-server is running on `tcp.alerts.com.ua` on port `1024`.
 
-## B1. Packet structure
+Example project for ESP8266: <https://wokwi.com/projects/330842127136195154>
+
+### B1. Packet structure
 
 All messages from server have the following format:
 
@@ -131,7 +133,7 @@ Every packet to and from server must end with an ASCII line break (`\n`).
 | `p`         | ping packet, server sends this every 15 seconds                            | Random number in range [0;10000)                                                                                     |
 | `s`         | state packet, contains information about air raid alert in specific region | Region number and air raid alert value. E.g. during air raid alert activation in Lviv region this will contain `12=1` |
 
-## B2. Communication protocol
+### B2. Communication protocol
 
 1. Client connects and sends its API key (ASCII encoding) within 3 seconds:
 
@@ -184,13 +186,13 @@ Sample TCP session (prefix `>` means serverbound, `<` means clientbound, `#` den
 < p:3985                 # ...
 ```
 
-## Use the source, Luke
+### Use the source, Luke
 
 This thing was made by [Andrew Dunai](https://github.com/and3rson).
 
 Source code for this service can be found here: <https://github.com/and3rson/raid>
 
-## But why?
+### But why?
 
 I support and preach the principles of open data and FOSS.
 

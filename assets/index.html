@@ -113,11 +113,11 @@ href="https://telegram.me/air_alert_ua">@air_alert_ua</a>.</p>
 href="https://alerts.com.ua/map.png"
 class="uri">https://alerts.com.ua/map.png</a></p>
 <figure>
-<img src="/map.png" width="400" alt="Карта Тривог" />
+<img src="/map.png" alt="Карта Тривог" />
 <figcaption aria-hidden="true">Карта Тривог</figcaption>
 </figure>
-<h1 id="a.-режим-http">A. Режим HTTP</h1>
-<h2 id="a1.-автентифікація">A1. Автентифікація</h2>
+<h2 id="a.-режим-http">A. Режим HTTP</h2>
+<h3 id="a1.-автентифікація">A1. Автентифікація</h3>
 <p>Вам потрібно ключ для роботи з цим API.</p>
 <ul>
 <li>Щоб отримати ключ, надішліть мені e-mail (<a href="mailto:a@dun.ai"
@@ -138,8 +138,8 @@ EventStream в браузерах</a> не підтримує надсиланн
 <li>Максимальна кількість запитів по одному API-ключу: 100 RPS</li>
 </ul>
 <p>Якщо ви перевищите зазначені ліміти, ви отримаєте HTTP 429.</p>
-<h2 id="a2.-ендпоїнти">A2. Ендпоїнти</h2>
-<h3 id="get-apistates"><code>GET /api/states</code></h3>
+<h3 id="a2.-ендпоїнти">A2. Ендпоїнти</h3>
+<h4 id="get-apistates"><code>GET /api/states</code></h4>
 <p>Повертає список областей з їхніми статусами.</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># $ curl https://alerts.com.ua/api/states -H &quot;X-API-Key: yourApiKey34421337&quot;</span></span>
@@ -164,7 +164,7 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">],</span></span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">&quot;last_update&quot;</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2022-04-05T06:15:10.333210918+03:00&quot;</span></span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span></code></pre></div>
-<h3 id="apistateid"><code>/api/state/&lt;ID&gt;</code></h3>
+<h4 id="apistateid"><code>/api/state/&lt;ID&gt;</code></h4>
 <p>Повертає область та статус тривоги за її ID.</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># $ curl https://alerts.com.ua/api/states/12 -H &quot;X-API-Key: yourApiKey34421337&quot;</span></span>
@@ -179,7 +179,7 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">},</span></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">&quot;last_update&quot;</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2022-04-05T06:15:10.333210918+03:00&quot;</span></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span></code></pre></div>
-<h3 id="get-apistateslive"><code>GET /api/states/live</code></h3>
+<h4 id="get-apistateslive"><code>GET /api/states/live</code></h4>
 <p><a
 href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">SSE</a>-ендпоінт,
 який генерує події в режимі реального часу.</p>
@@ -205,13 +205,16 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span><span class="kw">:</span><span class="at"> </span><span class="ch">null</span></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span></code></pre></div>
-<h1 id="b.-режим-tcp">B. Режим TCP</h1>
+<h2 id="b.-режим-tcp">B. Режим TCP</h2>
 <p>Якщо ви хочете використати наше API в інтегрованих системах -
 наприклад, Arduino чи ESP8266, то вам буде значно простіше та економніше
 отримувати сповіщення через старі добрі TCP-сокети.</p>
 <p>TCP-сервер працює за адресою <code>tcp.alerts.com.ua</code> на порті
 <code>1024</code>.</p>
-<h2 id="b1.-структура-пакетів">B1. Структура пакетів</h2>
+<p>Приклад проекту для ESP8266: <a
+href="https://wokwi.com/projects/330842127136195154"
+class="uri">https://wokwi.com/projects/330842127136195154</a></p>
+<h3 id="b1.-структура-пакетів">B1. Структура пакетів</h3>
 <p>Всі повідомлення від сервера мають наступний формат:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ТипПакета:Дані\n</span></span></code></pre></div>
 <p>Кожен пакет, що надсилається серверу та отримується від нього,
@@ -253,8 +256,8 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="
 </tr>
 </tbody>
 </table>
-<h2 id="b2.-протокол-спілкування-з-tcp-сервером">B2. Протокол
-спілкування з TCP-сервером</h2>
+<h3 id="b2.-протокол-спілкування-з-tcp-сервером">B2. Протокол
+спілкування з TCP-сервером</h3>
 <ol type="1">
 <li><p>Клієнт під’єднується і впродовж 3 секунд надсилає свій API-ключ в
 ASCII-кодуванні:</p>
@@ -297,12 +300,12 @@ state-пакет.</p></li>
 <span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> s<span class="op">:</span><span class="dv">12</span><span class="op">=</span><span class="dv">0</span>                 # Відбій тривоги у Львівській області</span>
 <span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">8321</span>                 # Пінг<span class="op">-</span>пакет</span>
 <span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">3985</span>                 # <span class="op">...</span></span></code></pre></div>
-<h2 id="use-the-source-luke">Use the source, Luke</h2>
+<h3 id="use-the-source-luke">Use the source, Luke</h3>
 <p>Цю штуку зробив <a href="https://dun.ai">Andrew Dunai</a>.</p>
 <p>Початковий код знаходиться тут: <a
 href="https://github.com/and3rson/raid"
 class="uri">https://github.com/and3rson/raid</a></p>
-<h2 id="але-навіщо">Але навіщо?</h2>
+<h3 id="але-навіщо">Але навіщо?</h3>
 <p>Я є прихильником відкритих даних та вільного програмного
 забезпечення.</p>
 <p>Я вважаю, що будь-яку <strong>інформацію, яка є відкритою,</strong>
