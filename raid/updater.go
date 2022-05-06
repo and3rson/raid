@@ -82,6 +82,7 @@ func (u *Updater) Run(ctx context.Context, wg *sync.WaitGroup, errch chan error)
 	wg.Add(1)
 
 	cc := NewChannelClient("air_alert_ua")
+	// cc := NewChannelClient("andrew_test_alerts")
 
 	var wait <-chan time.Time
 
@@ -131,6 +132,8 @@ func (u *Updater) Run(ctx context.Context, wg *sync.WaitGroup, errch chan error)
 			log.Infof("updater: fetch %d new messages", len(messages))
 			u.updaterState.LastMessageID = messages[len(messages)-1].ID
 			u.ProcessMessages(ctx, messages, true)
+
+			wait = time.After(0)
 		} else {
 			wait = time.After(2 * time.Second)
 		}

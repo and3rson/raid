@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -124,6 +125,10 @@ func (c *ChannelClient) FetchMessages(ctx context.Context, before int64) ([]Mess
 	for {
 		if root, err = c.fetchAndParse(req); err == nil {
 			break
+		}
+
+		if errors.Is(err, context.Canceled) {
+			return nil, err
 		}
 
 		log.Warnf("%v, will retry after 10s", err)
