@@ -12,7 +12,7 @@ Service works in two modes: HTTP and TCP.
 
 You can also use our static map: <https://alerts.com.ua/map.png>
 
-![Карта Тривог](/map.png){width="400"}
+![Карта Тривог](/map.png)
 
 # A. HTTP mode
 

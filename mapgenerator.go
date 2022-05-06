@@ -29,13 +29,19 @@ type MapData struct {
 type MapGenerator struct {
 	updaterState *UpdaterState
 	updates      *Topic[*State]
+	mapTemplate  *template.Template
 	MapData      *MapData
 }
 
 func NewMapGenerator(updaterState *UpdaterState, updates *Topic[*State]) *MapGenerator {
-	g := &MapGenerator{updaterState, updates, &MapData{}}
+	mapTemplate, err := template.New("maptemplate").Parse(mapTemplateStr)
+	if err != nil {
+		log.Fatalf("mapgenerator: parse map template: %s", err)
+	}
+
+	g := &MapGenerator{updaterState, updates, mapTemplate, &MapData{}}
 	if err := g.generateMap(updaterState); err != nil {
-		log.Fatalf("image: generate initial map: %s", err)
+		log.Fatalf("mapgenerator: generate initial map: %s", err)
 	}
 
 	return g
@@ -52,7 +58,7 @@ func (g *MapGenerator) Run(ctx context.Context, wg *sync.WaitGroup, errch chan e
 		select {
 		case <-events:
 			if err := g.generateMap(g.updaterState); err != nil {
-				errch <- fmt.Errorf("image: regenerate map: %s", err)
+				errch <- fmt.Errorf("mapgenerator: regenerate map: %s", err)
 
 				return
 			}
@@ -63,19 +69,14 @@ func (g *MapGenerator) Run(ctx context.Context, wg *sync.WaitGroup, errch chan e
 }
 
 func (g *MapGenerator) generateMap(updaterState *UpdaterState) error {
-	mapTemplate, err := template.New("maptemplate").Parse(mapTemplateStr)
-	if err != nil {
-		return fmt.Errorf("image: parse map template: %v", err)
-	}
-
 	stateAlerts := map[int]bool{}
 	for _, state := range updaterState.States {
 		stateAlerts[state.ID] = state.Alert
 	}
 
 	mapStr := bytes.NewBuffer(nil)
-	if err := mapTemplate.Execute(mapStr, stateAlerts); err != nil {
-		return fmt.Errorf("image: execute map template: %v", err)
+	if err := g.mapTemplate.Execute(mapStr, stateAlerts); err != nil {
+		return fmt.Errorf("mapgenerator: execute map template: %v", err)
 	}
 
 	svg, _ := oksvg.ReadIconStream(mapStr)
@@ -85,11 +86,13 @@ func (g *MapGenerator) generateMap(updaterState *UpdaterState) error {
 
 	out := bytes.NewBuffer(nil)
 	if err := png.Encode(out, rgba); err != nil {
-		return fmt.Errorf("image: encode png map: %v", err)
+		return fmt.Errorf("mapgenerator: encode png map: %v", err)
 	}
 
 	g.MapData.ContentType = "image/png"
 	g.MapData.Bytes = out.Bytes()
+
+	log.Infof("mapgenerator: generate map complete, size = %d B", len(g.MapData.Bytes))
 
 	return nil
 }
