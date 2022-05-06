@@ -4,6 +4,8 @@ Air Raid Alerts API (Ukraine)
 
 Production: <https://alerts.com.ua/>
 
+[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner-direct-single.svg)](https://stand-with-ukraine.pp.ua/)
+
 # Running locally
 
 ```sh
