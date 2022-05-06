@@ -14,13 +14,15 @@
 
 ![Карта Тривог](/map.png)
 
+Також ви можете отримувати історію всіх тривог у вигляді time series дампу (див. секцію A2).
+
 ## A. Режим HTTP
 
 ### A1. Автентифікація
 
 Вам потрібно ключ для роботи з цим API.
 
-  - Щоб отримати ключ, надішліть мені e-mail (<a@dun.ai>) або повідомлення в Telegram ([\@andunai](https://t.me/andunai)).
+  - Щоб отримати ключ, надішліть мені e-mail (<a@dun.ai>) або повідомлення в Telegram ([\@andunai](https://t.me/andunai)). Щоб прискорити отримання ключа, допишіть в текст свого повідомлення хештег "#api".
   - Надсилайте ключ в кожному запиті в заголовку `X-API-Key`.
   - **Для фронт-ендерів**: вам знадобиться [polyfill для EventStream](https://github.com/Yaffle/EventSource), оскільки [API EventStream в браузерах](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) не підтримує надсилання заголовків в запиті.
 
@@ -28,6 +30,7 @@
 
   - Максимальна кількість запитів з одної адреси: 10 RPS
   - Максимальна кількість запитів по одному API-ключу: 100 RPS
+  - Максимальна кількість запитів до ендпоїнту `/api/history`: 1 RPM
 
 Якщо ви перевищите зазначені ліміти, ви отримаєте HTTP 429.
 
@@ -106,6 +109,31 @@ event: ping
 data: null
 
 # ...
+```
+
+#### `GET /api/history`
+
+Повертає історію всіх тривог.
+
+Цей ендпоїнт можна викликати лише 1 раз на хвилину.
+
+```yaml
+# $ curl https://alerts.com.ua/api/history -H "X-API-Key: yourApiKey34421337"
+
+[
+  {"id":1,"date":"2022-03-15T18:02:56+02:00","state_id":9,"alert":false},
+  {"id":2,"date":"2022-03-15T18:10:34+02:00","state_id":1,"alert":true},
+  {"id":3,"date":"2022-03-15T18:11:25+02:00","state_id":5,"alert":true},
+  {"id":4,"date":"2022-03-15T18:15:11+02:00","state_id":10,"alert":true},
+  {"id":5,"date":"2022-03-15T18:17:28+02:00","state_id":8,"alert":true},
+  {"id":6,"date":"2022-03-15T18:17:29+02:00","state_id":12,"alert":true},
+  {"id":7,"date":"2022-03-15T18:18:35+02:00","state_id":16,"alert":true},
+  {"id":8,"date":"2022-03-15T18:19:13+02:00","state_id":2,"alert":true},
+  {"id":9,"date":"2022-03-15T18:19:20+02:00","state_id":25,"alert":true},
+  {"id":10,"date":"2022-03-15T18:22:29+02:00","state_id":18,"alert":true},
+  {"id":11,"date":"2022-03-15T18:30:17+02:00","state_id":24,"alert":true},
+  # ...
+]
 ```
 
 ## B. Режим TCP

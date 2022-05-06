@@ -7,7 +7,7 @@ init:
 	go get
 
 generate:
-	go generate .
+	go generate ./raid/
 
 run:
 	go run ./cmd/raid/main.go ${ARGS}

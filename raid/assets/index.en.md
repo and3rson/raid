@@ -14,13 +14,15 @@ You can also use our static map: <https://alerts.com.ua/map.png>
 
 ![Карта Тривог](/map.png)
 
+You can also retrieve history of all alerts as time series dump (see section A2).
+
 ## A. HTTP mode
 
 ### A1. Authentication
 
 You will need a key to use this API.
 
-  - To request a key, please send me an email (<a@dun.ai>) or ping me in Telegram ([\@andunai](https://t.me/andunai)).
+  - To request a key, please send me an email (<a@dun.ai>) or ping me in Telegram ([\@andunai](https://t.me/andunai)). To speed up the process of getting the key, please append "#api" hashtag to your message text.
   - Include the key with every request in `X-API-Key` header.
   - **When writing front-end code**: you'll need a [polyfill for EventStream](https://github.com/Yaffle/EventSource) since [browser's EventStream API](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) does not allow sending headers with requests.
 
@@ -28,6 +30,7 @@ Please be aware that this API is rate-limited:
 
   - Max request rate from single address: 10 RPS
   - Max request rate per API key: 100 RPS
+  - Max request rate for `/api/history` endpoint: 1 RPM
 
 If you exceed the above limits you will be throttled with a HTTP 429 response.
 
@@ -106,6 +109,31 @@ event: ping
 data: null
 
 # ...
+```
+
+#### `GET /api/history`
+
+Returns history of all alerts.
+
+This endpoint can be called only once per minute.
+
+```yaml
+# $ curl https://alerts.com.ua/api/history -H "X-API-Key: yourApiKey34421337"
+
+[
+  {"id":1,"date":"2022-03-15T18:02:56+02:00","state_id":9,"alert":false},
+  {"id":2,"date":"2022-03-15T18:10:34+02:00","state_id":1,"alert":true},
+  {"id":3,"date":"2022-03-15T18:11:25+02:00","state_id":5,"alert":true},
+  {"id":4,"date":"2022-03-15T18:15:11+02:00","state_id":10,"alert":true},
+  {"id":5,"date":"2022-03-15T18:17:28+02:00","state_id":8,"alert":true},
+  {"id":6,"date":"2022-03-15T18:17:29+02:00","state_id":12,"alert":true},
+  {"id":7,"date":"2022-03-15T18:18:35+02:00","state_id":16,"alert":true},
+  {"id":8,"date":"2022-03-15T18:19:13+02:00","state_id":2,"alert":true},
+  {"id":9,"date":"2022-03-15T18:19:20+02:00","state_id":25,"alert":true},
+  {"id":10,"date":"2022-03-15T18:22:29+02:00","state_id":18,"alert":true},
+  {"id":11,"date":"2022-03-15T18:30:17+02:00","state_id":24,"alert":true},
+  # ...
+]
 ```
 
 ## B. TCP Mode

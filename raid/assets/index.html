@@ -116,13 +116,16 @@ class="uri">https://alerts.com.ua/map.png</a></p>
 <img src="/map.png" alt="Карта Тривог" />
 <figcaption aria-hidden="true">Карта Тривог</figcaption>
 </figure>
+<p>Також ви можете отримувати історію всіх тривог у вигляді time series
+дампу (див. секцію A2).</p>
 <h2 id="a.-режим-http">A. Режим HTTP</h2>
 <h3 id="a1.-автентифікація">A1. Автентифікація</h3>
 <p>Вам потрібно ключ для роботи з цим API.</p>
 <ul>
 <li>Щоб отримати ключ, надішліть мені e-mail (<a href="mailto:a@dun.ai"
 class="email">a@dun.ai</a>) або повідомлення в Telegram (<a
-href="https://t.me/andunai">@andunai</a>).</li>
+href="https://t.me/andunai">@andunai</a>). Щоб прискорити отримання
+ключа, допишіть в текст свого повідомлення хештег “#api”.</li>
 <li>Надсилайте ключ в кожному запиті в заголовку
 <code>X-API-Key</code>.</li>
 <li><strong>Для фронт-ендерів</strong>: вам знадобиться <a
@@ -136,6 +139,8 @@ EventStream в браузерах</a> не підтримує надсиланн
 <ul>
 <li>Максимальна кількість запитів з одної адреси: 10 RPS</li>
 <li>Максимальна кількість запитів по одному API-ключу: 100 RPS</li>
+<li>Максимальна кількість запитів до ендпоїнту
+<code>/api/history</code>: 1 RPM</li>
 </ul>
 <p>Якщо ви перевищите зазначені ліміти, ви отримаєте HTTP 429.</p>
 <h3 id="a2.-ендпоїнти">A2. Ендпоїнти</h3>
@@ -205,6 +210,26 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span><span class="kw">:</span><span class="at"> </span><span class="ch">null</span></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span></code></pre></div>
+<h4 id="get-apihistory"><code>GET /api/history</code></h4>
+<p>Повертає історію всіх тривог.</p>
+<p>Цей ендпоїнт можна викликати лише 1 раз на хвилину.</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># $ curl https://alerts.com.ua/api/history -H &quot;X-API-Key: yourApiKey34421337&quot;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">[</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">{</span><span class="st">&quot;id&quot;</span><span class="at">:1</span><span class="kw">,</span><span class="st">&quot;date&quot;</span><span class="at">:</span><span class="st">&quot;2022-03-15T18:02:56+02:00&quot;</span><span class="kw">,</span><span class="st">&quot;state_id&quot;</span><span class="at">:9</span><span class="kw">,</span><span class="st">&quot;alert&quot;</span><span class="at">:false</span><span class="kw">},</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">{</span><span class="st">&quot;id&quot;</span><span class="at">:2</span><span class="kw">,</span><span class="st">&quot;date&quot;</span><span class="at">:</span><span class="st">&quot;2022-03-15T18:10:34+02:00&quot;</span><span class="kw">,</span><span class="st">&quot;state_id&quot;</span><span class="at">:1</span><span class="kw">,</span><span class="st">&quot;alert&quot;</span><span class="at">:true</span><span class="kw">},</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">{</span><span class="st">&quot;id&quot;</span><span class="at">:3</span><span class="kw">,</span><span class="st">&quot;date&quot;</span><span class="at">:</span><span class="st">&quot;2022-03-15T18:11:25+02:00&quot;</span><span class="kw">,</span><span class="st">&quot;state_id&quot;</span><span class="at">:5</span><span class="kw">,</span><span class="st">&quot;alert&quot;</span><span class="at">:true</span><span class="kw">},</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">{</span><span class="st">&quot;id&quot;</span><span class="at">:4</span><span class="kw">,</span><span class="st">&quot;date&quot;</span><span class="at">:</span><span class="st">&quot;2022-03-15T18:15:11+02:00&quot;</span><span class="kw">,</span><span class="st">&quot;state_id&quot;</span><span class="at">:10</span><span class="kw">,</span><span class="st">&quot;alert&quot;</span><span class="at">:true</span><span class="kw">},</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">{</span><span class="st">&quot;id&quot;</span><span class="at">:5</span><span class="kw">,</span><span class="st">&quot;date&quot;</span><span class="at">:</span><span class="st">&quot;2022-03-15T18:17:28+02:00&quot;</span><span class="kw">,</span><span class="st">&quot;state_id&quot;</span><span class="at">:8</span><span class="kw">,</span><span class="st">&quot;alert&quot;</span><span class="at">:true</span><span class="kw">},</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">{</span><span class="st">&quot;id&quot;</span><span class="at">:6</span><span class="kw">,</span><span class="st">&quot;date&quot;</span><span class="at">:</span><span class="st">&quot;2022-03-15T18:17:29+02:00&quot;</span><span class="kw">,</span><span class="st">&quot;state_id&quot;</span><span class="at">:12</span><span class="kw">,</span><span class="st">&quot;alert&quot;</span><span class="at">:true</span><span class="kw">},</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">{</span><span class="st">&quot;id&quot;</span><span class="at">:7</span><span class="kw">,</span><span class="st">&quot;date&quot;</span><span class="at">:</span><span class="st">&quot;2022-03-15T18:18:35+02:00&quot;</span><span class="kw">,</span><span class="st">&quot;state_id&quot;</span><span class="at">:16</span><span class="kw">,</span><span class="st">&quot;alert&quot;</span><span class="at">:true</span><span class="kw">},</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">{</span><span class="st">&quot;id&quot;</span><span class="at">:8</span><span class="kw">,</span><span class="st">&quot;date&quot;</span><span class="at">:</span><span class="st">&quot;2022-03-15T18:19:13+02:00&quot;</span><span class="kw">,</span><span class="st">&quot;state_id&quot;</span><span class="at">:2</span><span class="kw">,</span><span class="st">&quot;alert&quot;</span><span class="at">:true</span><span class="kw">},</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">{</span><span class="st">&quot;id&quot;</span><span class="at">:9</span><span class="kw">,</span><span class="st">&quot;date&quot;</span><span class="at">:</span><span class="st">&quot;2022-03-15T18:19:20+02:00&quot;</span><span class="kw">,</span><span class="st">&quot;state_id&quot;</span><span class="at">:25</span><span class="kw">,</span><span class="st">&quot;alert&quot;</span><span class="at">:true</span><span class="kw">},</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">{</span><span class="st">&quot;id&quot;</span><span class="at">:10</span><span class="kw">,</span><span class="st">&quot;date&quot;</span><span class="at">:</span><span class="st">&quot;2022-03-15T18:22:29+02:00&quot;</span><span class="kw">,</span><span class="st">&quot;state_id&quot;</span><span class="at">:18</span><span class="kw">,</span><span class="st">&quot;alert&quot;</span><span class="at">:true</span><span class="kw">},</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">{</span><span class="st">&quot;id&quot;</span><span class="at">:11</span><span class="kw">,</span><span class="st">&quot;date&quot;</span><span class="at">:</span><span class="st">&quot;2022-03-15T18:30:17+02:00&quot;</span><span class="kw">,</span><span class="st">&quot;state_id&quot;</span><span class="at">:24</span><span class="kw">,</span><span class="st">&quot;alert&quot;</span><span class="at">:true</span><span class="kw">},</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">  # ...</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="kw">]</span></span></code></pre></div>
 <h2 id="b.-режим-tcp">B. Режим TCP</h2>
 <p>Якщо ви хочете використати наше API в інтегрованих системах -
 наприклад, Arduino чи ESP8266, то вам буде значно простіше та економніше
@@ -216,7 +241,7 @@ href="https://wokwi.com/projects/330842127136195154"
 class="uri">https://wokwi.com/projects/330842127136195154</a></p>
 <h3 id="b1.-структура-пакетів">B1. Структура пакетів</h3>
 <p>Всі повідомлення від сервера мають наступний формат:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ТипПакета:Дані\n</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ТипПакета:Дані\n</span></span></code></pre></div>
 <p>Кожен пакет, що надсилається серверу та отримується від нього,
 повинен завершуватись ASCII-символом 0x10 (<code>\n</code>).</p>
 <table>
@@ -282,24 +307,24 @@ state-пакет.</p></li>
 <p>Приклад TCP-сесії (префікс <code>&gt;</code> означає дані, надіслані
 клієнтом, <code>&lt;</code> - дані, надіслані сервером, а <code>#</code>
 - коментарі):</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> yourApiKey34421337     # Клієнт надіслав API<span class="op">-</span>ключ</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> a<span class="op">:</span>ok                   # Авторизація успішна</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> s<span class="op">:</span><span class="dv">1</span><span class="op">=</span><span class="dv">0</span>                  # Початкові дані про <span class="dv">25</span> областей</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> s<span class="op">:</span><span class="dv">2</span><span class="op">=</span><span class="dv">0</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> s<span class="op">:</span><span class="dv">3</span><span class="op">=</span><span class="dv">0</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="op">...</span>                      # (пропущено <span class="dv">20</span> рядків)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> s<span class="op">:</span><span class="dv">24</span><span class="op">=</span><span class="dv">0</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> s<span class="op">:</span><span class="dv">25</span><span class="op">=</span><span class="dv">0</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">1241</span>                 # Пінг<span class="op">-</span>пакет</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">2508</span>                 # <span class="op">...</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">1902</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">9028</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> s<span class="op">:</span><span class="dv">12</span><span class="op">=</span><span class="dv">1</span>                 # У Львівській області тривога<span class="op">!</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">3819</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">9873</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> s<span class="op">:</span><span class="dv">12</span><span class="op">=</span><span class="dv">0</span>                 # Відбій тривоги у Львівській області</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">8321</span>                 # Пінг<span class="op">-</span>пакет</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">3985</span>                 # <span class="op">...</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> yourApiKey34421337     # Клієнт надіслав API<span class="op">-</span>ключ</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> a<span class="op">:</span>ok                   # Авторизація успішна</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> s<span class="op">:</span><span class="dv">1</span><span class="op">=</span><span class="dv">0</span>                  # Початкові дані про <span class="dv">25</span> областей</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> s<span class="op">:</span><span class="dv">2</span><span class="op">=</span><span class="dv">0</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> s<span class="op">:</span><span class="dv">3</span><span class="op">=</span><span class="dv">0</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="op">...</span>                      # (пропущено <span class="dv">20</span> рядків)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> s<span class="op">:</span><span class="dv">24</span><span class="op">=</span><span class="dv">0</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> s<span class="op">:</span><span class="dv">25</span><span class="op">=</span><span class="dv">0</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">1241</span>                 # Пінг<span class="op">-</span>пакет</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">2508</span>                 # <span class="op">...</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">1902</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">9028</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> s<span class="op">:</span><span class="dv">12</span><span class="op">=</span><span class="dv">1</span>                 # У Львівській області тривога<span class="op">!</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">3819</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">9873</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> s<span class="op">:</span><span class="dv">12</span><span class="op">=</span><span class="dv">0</span>                 # Відбій тривоги у Львівській області</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">8321</span>                 # Пінг<span class="op">-</span>пакет</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">3985</span>                 # <span class="op">...</span></span></code></pre></div>
 <h3 id="use-the-source-luke">Use the source, Luke</h3>
 <p>Цю штуку зробив <a href="https://dun.ai">Andrew Dunai</a>.</p>
 <p>Початковий код знаходиться тут: <a
