@@ -113,9 +113,15 @@ href="https://telegram.me/air_alert_ua">@air_alert_ua</a>.</p>
 href="https://alerts.com.ua/map.png"
 class="uri">https://alerts.com.ua/map.png</a></p>
 <figure>
-<img src="/map.png" alt="Карта Тривог" />
+<img src="/map.png" id="map" alt="Карта Тривог" />
 <figcaption aria-hidden="true">Карта Тривог</figcaption>
 </figure>
+<script type="text/javascript">
+var map = document.getElementById('map');
+window.setInterval(function() {
+  map.src = map.src.split('?')[0] + '?' + new Date().getTime();
+}, 5000);
+</script>
 <p>Також ви можете отримувати історію всіх тривог у вигляді time series
 дампу (див. секцію A2).</p>
 <h2 id="a.-режим-http">A. Режим HTTP</h2>

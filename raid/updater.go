@@ -11,10 +11,11 @@ import (
 )
 
 type Updater struct {
-	timezone     *time.Location
-	backlogSize  int
-	updaterState *UpdaterState
-	Updates      *Topic[Update]
+	telegramChannel string
+	timezone        *time.Location
+	backlogSize     int
+	updaterState    *UpdaterState
+	Updates         *Topic[Update]
 }
 
 type UpdaterState struct {
@@ -36,7 +37,7 @@ type Update struct {
 	State   State
 }
 
-func NewUpdater(timezone *time.Location, backlogSize int, updaterState *UpdaterState) *Updater {
+func NewUpdater(telegramChannel string, timezone *time.Location, backlogSize int, updaterState *UpdaterState) *Updater {
 	if len(updaterState.States) == 0 {
 		updaterState.States = []State{
 			{1, "Вінницька область", "Vinnytsia oblast", false, nil},
@@ -68,6 +69,7 @@ func NewUpdater(timezone *time.Location, backlogSize int, updaterState *UpdaterS
 	}
 
 	return &Updater{
+		telegramChannel,
 		timezone,
 		backlogSize,
 		updaterState,
@@ -81,8 +83,7 @@ func (u *Updater) Run(ctx context.Context, wg *sync.WaitGroup, errch chan error)
 	defer wg.Done()
 	wg.Add(1)
 
-	cc := NewChannelClient("air_alert_ua")
-	// cc := NewChannelClient("andrew_test_alerts")
+	cc := NewChannelClient(u.telegramChannel)
 
 	var wait <-chan time.Time
 

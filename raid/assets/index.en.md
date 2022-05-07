@@ -12,7 +12,14 @@ Service works in two modes: HTTP and TCP.
 
 You can also use our static map: <https://alerts.com.ua/map.png>
 
-![Карта Тривог](/map.png)
+![Карта Тривог](/map.png){#map}
+
+<script type="text/javascript">
+var map = document.getElementById('map');
+window.setInterval(function() {
+  map.src = map.src.split('?')[0] + '?' + new Date().getTime();
+}, 5000);
+</script>
 
 You can also retrieve history of all alerts as time series dump (see section A2).
 

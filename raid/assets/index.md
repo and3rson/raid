@@ -12,7 +12,14 @@
 
 Також за посиланням доступна статична карта: <https://alerts.com.ua/map.png>
 
-![Карта Тривог](/map.png)
+![Карта Тривог](/map.png){#map}
+
+<script type="text/javascript">
+var map = document.getElementById('map');
+window.setInterval(function() {
+  map.src = map.src.split('?')[0] + '?' + new Date().getTime();
+}, 5000);
+</script>
 
 Також ви можете отримувати історію всіх тривог у вигляді time series дампу (див. секцію A2).
 

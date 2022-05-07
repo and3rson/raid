@@ -31,7 +31,7 @@ func main() {
 		log.Fatalf("main: create app state persistence: %v", err)
 	}
 
-	updater := raid.NewUpdater(settings.Timezone, settings.BacklogSize, updaterState)
+	updater := raid.NewUpdater(settings.TelegramChannel, settings.Timezone, settings.BacklogSize, updaterState)
 	mapGenerator := raid.NewMapGenerator(updaterState, updater.Updates)
 	delorean := raid.NewDelorean("history", updater.Updates)
 	apiServer := raid.NewAPIServer(10101, settings.APIKeys, updaterState, updater.Updates, mapGenerator.MapData, delorean.ListRecords)

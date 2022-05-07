@@ -10,17 +10,19 @@ import (
 )
 
 type Settings struct {
-	TimezoneName string `env:"TZ" envDefault:"Europe/Kiev" yaml:"timezone_name"`
-	Timezone     *time.Location
-	APIKeys      []string `env:"API_KEYS" envSeparator:"," envDefault:"" yaml:"api_keys"`
-	Debug        bool     `env:"DEBUG" envDefault:"false" yaml:"debug"`
-	BacklogSize  int      `env:"BACKLOG_SIZE" envDefault:"200" yaml:"backlog_size"`
+	TelegramChannel string `env:"TELEGRAM_CHANNEL" envDefault:"air_alert_ua" yaml:"telegram_channel"`
+	TimezoneName    string `env:"TZ" envDefault:"Europe/Kiev" yaml:"timezone_name"`
+	Timezone        *time.Location
+	APIKeys         []string `env:"API_KEYS" envSeparator:"," envDefault:"" yaml:"api_keys"`
+	Debug           bool     `env:"DEBUG" envDefault:"false" yaml:"debug"`
+	BacklogSize     int      `env:"BACKLOG_SIZE" envDefault:"200" yaml:"backlog_size"`
 }
 
 func MustLoadSettings() (settings Settings) {
 	var err error
 
 	settings.TimezoneName = "Europe/Kiev"
+	settings.TelegramChannel = "air_alert_ua"
 
 	if len(os.Args) > 1 {
 		var f *os.File
