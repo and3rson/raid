@@ -162,10 +162,10 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 		enc := json.NewEncoder(rw)
 
 		if id != 0 {
-			for _, state := range a.updaterState.States {
+			for i, state := range a.updaterState.States {
 				if state.ID == id {
 					_ = enc.Encode(StateResponse{
-						&state,
+						&a.updaterState.States[i],
 						a.updaterState.LastUpdate,
 					})
 
@@ -246,7 +246,7 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 
 	apiMux.HandleFunc("/history", func(rw http.ResponseWriter, r *http.Request) {
 		key := r.Header.Get("x-api-key")
-		lastCall, _ := historyCallsPerKey[key]
+		lastCall := historyCallsPerKey[key]
 		if time.Since(lastCall) < historyCooldown {
 			rw.Header().Add("Content-Type", "application/json")
 			rw.WriteHeader(429)

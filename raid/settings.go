@@ -10,12 +10,13 @@ import (
 )
 
 type Settings struct {
-	TelegramChannel string `env:"TELEGRAM_CHANNEL" envDefault:"air_alert_ua" yaml:"telegram_channel"`
-	TimezoneName    string `env:"TZ" envDefault:"Europe/Kiev" yaml:"timezone_name"`
-	Timezone        *time.Location
-	APIKeys         []string `env:"API_KEYS" envSeparator:"," envDefault:"" yaml:"api_keys"`
-	Debug           bool     `env:"DEBUG" envDefault:"false" yaml:"debug"`
-	BacklogSize     int      `env:"BACKLOG_SIZE" envDefault:"200" yaml:"backlog_size"`
+	TelegramChannel string         `env:"TELEGRAM_CHANNEL" envDefault:"air_alert_ua" yaml:"telegram_channel"`
+	TimezoneName    string         `env:"TZ" envDefault:"Europe/Kiev" yaml:"timezone_name"`
+	Timezone        *time.Location ``
+	APIKeys         []string       `env:"API_KEYS" envSeparator:"," envDefault:"" yaml:"api_keys"`
+	Debug           bool           `env:"DEBUG" envDefault:"false" yaml:"debug"`
+	Trace           bool           `env:"TRACE" envDefault:"false" yaml:"trace"`
+	BacklogSize     int            `env:"BACKLOG_SIZE" envDefault:"200" yaml:"backlog_size"`
 }
 
 func MustLoadSettings() (settings Settings) {

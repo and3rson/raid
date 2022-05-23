@@ -15,4 +15,6 @@
 # vendor/
 
 /data
-/settings.yml
+/snapshots
+/*.mp4
+/*.webm

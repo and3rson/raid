@@ -9,7 +9,6 @@ import (
 	_ "time/tzdata"
 
 	"github.com/and3rson/raid/raid"
-
 	log "github.com/sirupsen/logrus"
 )
 
@@ -18,6 +17,10 @@ func main() {
 
 	if settings.Debug {
 		log.SetLevel(log.DebugLevel)
+	}
+
+	if settings.Trace {
+		log.SetLevel(log.TraceLevel)
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())

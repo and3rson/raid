@@ -72,7 +72,7 @@ Returns the list of regions with their statuses.
 }
 ```
 
-#### `/api/state/<ID>`
+#### `/api/states/<ID>`
 
 Returns status for single region.
 

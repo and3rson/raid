@@ -11,3 +11,7 @@ services:
     ports:
       - 10101:10101
       - 1024:1024
+    volumes:
+      - ./settings.yml:/root/settings.yml:ro
+      - ./data:/root/data
+    command: settings.yml

@@ -14,7 +14,7 @@ run:
 
 lint:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-	golangci-lint run -E wsl -E wrapcheck -E nlreturn -E revive -E noctx -E gocritic
+	golangci-lint run -E wsl,wrapcheck,nlreturn,revive,noctx,gocritic,errorlint,forcetypeassert
 
 build-docker:
 	docker build -t $(ECR_URL) .
@@ -26,3 +26,11 @@ push-docker: generate build-docker
 	`AWS_PROFILE=adunai aws ecr get-login --no-include-email`
 	docker push $(ECR_URL)
 	docker logout
+
+.PHONY: snapshots
+snapshots:
+	go run cmd/snapshots/main.go
+
+.PHONY: video
+video:
+	mencoder "mf://snapshots/*.png" -o video.mp4 -ovc lavc -lavcopts vcodec=mjpeg -fps 60

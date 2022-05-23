@@ -54,7 +54,7 @@ func NewDelorean(dbname string, updates *Topic[Update]) *Delorean {
 
 func (d *Delorean) addRecord(state State) error {
 	if _, err := d.addRecordStmt.Exec(state.Changed, state.ID, state.Alert); err != nil {
-		return fmt.Errorf("delorean: execute add record: %v", err)
+		return fmt.Errorf("delorean: execute add record: %w", err)
 	}
 
 	return nil
@@ -63,7 +63,7 @@ func (d *Delorean) addRecord(state State) error {
 func (d *Delorean) ListRecords() ([]Record, error) {
 	rows, err := d.db.Query("SELECT * FROM events ORDER BY id ASC")
 	if err != nil {
-		return nil, fmt.Errorf("delorean: list records: %v", err)
+		return nil, fmt.Errorf("delorean: list records: %w", err)
 	}
 	defer rows.Close()
 
@@ -72,7 +72,7 @@ func (d *Delorean) ListRecords() ([]Record, error) {
 	for rows.Next() {
 		record := Record{}
 		if err := rows.Scan(&record.ID, &record.Date, &record.StateID, &record.Alert); err != nil {
-			return nil, fmt.Errorf("delorean: scan row: %v", err)
+			return nil, fmt.Errorf("delorean: scan row: %w", err)
 		}
 
 		result = append(result, record)
@@ -87,7 +87,9 @@ func (d *Delorean) Run(ctx context.Context, wg *sync.WaitGroup, errch chan error
 	defer wg.Done()
 	wg.Add(1)
 
-	events := d.updates.Subscribe("delorean", FilterAll[Update])
+	events := d.updates.Subscribe("delorean", func(u Update) bool {
+		return true
+	})
 	defer d.updates.Unsubscribe(events)
 
 	for {
@@ -98,7 +100,7 @@ func (d *Delorean) Run(ctx context.Context, wg *sync.WaitGroup, errch chan error
 			}
 
 			if err := d.addRecord(event.State); err != nil {
-				errch <- fmt.Errorf("delorean: add record: %s", err)
+				errch <- fmt.Errorf("delorean: add record: %w", err)
 
 				return
 			}

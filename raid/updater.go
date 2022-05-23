@@ -185,3 +185,13 @@ func (u *Updater) ProcessMessages(ctx context.Context, messages []Message, isFre
 		}
 	}
 }
+
+func (s *UpdaterState) FindState(id int) *State {
+	for i, state := range s.States {
+		if state.ID == id {
+			return &s.States[i]
+		}
+	}
+
+	return nil
+}

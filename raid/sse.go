@@ -24,7 +24,11 @@ func (e *SSEEncoder) Write(event string, data interface{}) error {
 		return fmt.Errorf("sse: write event data: %w", err)
 	}
 
-	e.writer.(http.Flusher).Flush()
+	if flusher, ok := e.writer.(http.Flusher); ok {
+		flusher.Flush()
+	} else {
+		return fmt.Errorf("sse: failed to cast writer to http.Flusher")
+	}
 
 	return nil
 }
