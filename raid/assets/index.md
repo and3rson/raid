@@ -72,7 +72,7 @@ window.setInterval(function() {
 }
 ```
 
-#### `/api/states/<ID>`
+#### `GET /api/states/<ID>`
 
 Повертає область та статус тривоги за її ID.
 
@@ -91,9 +91,11 @@ window.setInterval(function() {
 }
 ```
 
-#### `GET /api/states/live`
+#### `GET /api/states/live` & `GET /api/states/live/<ID>`
 
 [SSE](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)-ендпоінт, який генерує події в режимі реального часу.
+
+Якщо передати параметр ID, то ви будете отримувати лише події, пов'язані з цією областю.
 
 Приклад клієнта: <https://codesandbox.io/s/goofy-elgamal-mkdkzv?file=/src/App.js>
 
@@ -110,7 +112,7 @@ event: ping
 data: null
 
 event: update
-data: {"state":{"id":12,"name":"Львівська область","name_en":"Lviv oblast","alert":false,"changed":"2022-04-05T06:14:56+03:00"}}
+data: {"state":{"id":12,"name":"Львівська область","name_en":"Lviv oblast","alert":false,"changed":"2022-04-05T06:14:56+03:00"},"notification_id":"b7b5cb85-ddc0-11ec-90d3-c8b29b63332d"}
 
 event: ping
 data: null

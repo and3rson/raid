@@ -175,7 +175,7 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">],</span></span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">&quot;last_update&quot;</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2022-04-05T06:15:10.333210918+03:00&quot;</span></span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span></code></pre></div>
-<h4 id="apistatesid"><code>/api/states/&lt;ID&gt;</code></h4>
+<h4 id="get-apistatesid"><code>GET /api/states/&lt;ID&gt;</code></h4>
 <p>Повертає область та статус тривоги за її ID.</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># $ curl https://alerts.com.ua/api/states/12 -H &quot;X-API-Key: yourApiKey34421337&quot;</span></span>
@@ -190,10 +190,14 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">},</span></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">&quot;last_update&quot;</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2022-04-05T06:15:10.333210918+03:00&quot;</span></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span></code></pre></div>
-<h4 id="get-apistateslive"><code>GET /api/states/live</code></h4>
+<h4
+id="get-apistateslive-get-apistatesliveid"><code>GET /api/states/live</code>
+&amp; <code>GET /api/states/live/&lt;ID&gt;</code></h4>
 <p><a
 href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">SSE</a>-ендпоінт,
 який генерує події в режимі реального часу.</p>
+<p>Якщо передати параметр ID, то ви будете отримувати лише події,
+пов’язані з цією областю.</p>
 <p>Приклад клієнта: <a
 href="https://codesandbox.io/s/goofy-elgamal-mkdkzv?file=/src/App.js"
 class="uri">https://codesandbox.io/s/goofy-elgamal-mkdkzv?file=/src/App.js</a></p>
@@ -210,7 +214,7 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span><span class="kw">:</span><span class="at"> </span><span class="ch">null</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">event</span><span class="kw">:</span><span class="at"> update</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="st">&quot;state&quot;</span><span class="at">:{</span><span class="st">&quot;id&quot;</span><span class="at">:12</span><span class="kw">,</span><span class="st">&quot;name&quot;</span><span class="at">:</span><span class="st">&quot;Львівська область&quot;</span><span class="kw">,</span><span class="st">&quot;name_en&quot;</span><span class="at">:</span><span class="st">&quot;Lviv oblast&quot;</span><span class="kw">,</span><span class="st">&quot;alert&quot;</span><span class="at">:false</span><span class="kw">,</span><span class="st">&quot;changed&quot;</span><span class="at">:</span><span class="st">&quot;2022-04-05T06:14:56+03:00&quot;</span><span class="kw">}</span><span class="at">}</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="st">&quot;state&quot;</span><span class="at">:{</span><span class="st">&quot;id&quot;</span><span class="at">:12</span><span class="kw">,</span><span class="st">&quot;name&quot;</span><span class="at">:</span><span class="st">&quot;Львівська область&quot;</span><span class="kw">,</span><span class="st">&quot;name_en&quot;</span><span class="at">:</span><span class="st">&quot;Lviv oblast&quot;</span><span class="kw">,</span><span class="st">&quot;alert&quot;</span><span class="at">:false</span><span class="kw">,</span><span class="st">&quot;changed&quot;</span><span class="at">:</span><span class="st">&quot;2022-04-05T06:14:56+03:00&quot;</span><span class="kw">}</span><span class="at">,&quot;notification_id&quot;:&quot;b7b5cb85-ddc0-11ec-90d3-c8b29b63332d&quot;}</span></span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">event</span><span class="kw">:</span><span class="at"> ping</span></span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span><span class="kw">:</span><span class="at"> </span><span class="ch">null</span></span>

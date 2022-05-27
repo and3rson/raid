@@ -14,6 +14,7 @@ import (
 
 	_ "embed"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
@@ -42,7 +43,8 @@ type StateResponse struct {
 }
 
 type PollResponse struct {
-	State State `json:"state"`
+	State          State     `json:"state"`
+	NotificationID uuid.UUID `json:"notification_id"`
 }
 
 type APIServer struct {
@@ -221,7 +223,12 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 					return
 				}
 
-				if err := sse.Write("update", PollResponse{event.State}); err != nil {
+				uuid1, err := uuid.NewUUID()
+				if err != nil {
+					return
+				}
+
+				if err := sse.Write("update", PollResponse{event.State, uuid1}); err != nil {
 					log.Errorf("api: send SSE update: %s", err)
 
 					return

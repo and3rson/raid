@@ -43,7 +43,7 @@ If you exceed the above limits you will be throttled with a HTTP 429 response.
 
 ### A2. Endpoints
 
-#### `/api/states`
+#### `GET /api/states`
 
 Returns the list of regions with their statuses.
 
@@ -72,7 +72,7 @@ Returns the list of regions with their statuses.
 }
 ```
 
-#### `/api/states/<ID>`
+#### `GET /api/states/<ID>`
 
 Returns status for single region.
 
@@ -91,9 +91,11 @@ Returns status for single region.
 }
 ```
 
-#### `/api/states/live`
+#### `GET /api/states/live` & `GET /api/states/live/<ID>`
 
 [SSE](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) endpoint which yields alert events in real time.
+
+If you pass ID, you will receive events related to the requested region only.
 
 Client example: <https://codesandbox.io/s/goofy-elgamal-mkdkzv?file=/src/App.js>
 
@@ -110,7 +112,7 @@ event: ping
 data: null
 
 event: update
-data: {"state":{"id":12,"name":"Львівська область","name_en":"Lviv oblast","alert":false,"changed":"2022-04-05T06:14:56+03:00"}}
+data: {"state":{"id":12,"name":"Львівська область","name_en":"Lviv oblast","alert":false,"changed":"2022-04-05T06:14:56+03:00"},"notification_id":"b7b5cb85-ddc0-11ec-90d3-c8b29b63332d"}
 
 event: ping
 data: null
