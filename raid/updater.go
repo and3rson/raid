@@ -34,6 +34,7 @@ type State struct {
 
 type Update struct {
 	IsFresh bool
+	IsLast  bool
 	State   State
 }
 
@@ -142,6 +143,8 @@ func (u *Updater) Run(ctx context.Context, wg *sync.WaitGroup, errch chan error)
 }
 
 func (u *Updater) ProcessMessages(ctx context.Context, messages []Message, isFresh bool) {
+	updates := []Update{}
+
 	for _, msg := range messages {
 		var (
 			on    bool
@@ -178,11 +181,19 @@ func (u *Updater) ProcessMessages(ctx context.Context, messages []Message, isFre
 			state.Changed = &t
 			state.Alert = on
 			log.Debugf("updater: new state: %s (id=%d) -> %v", state.Name, state.ID, on)
-			u.Updates.Broadcast(Update{
+			updates = append(updates, Update{
 				IsFresh: isFresh,
 				State:   *state,
 			})
 		}
+	}
+
+	for i, update := range updates {
+		if i == len(updates)-1 {
+			update.IsLast = true
+		}
+
+		u.Updates.Broadcast(update)
 	}
 }
 

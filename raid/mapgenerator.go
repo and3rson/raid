@@ -79,9 +79,13 @@ func (g *MapGenerator) Run(ctx context.Context, wg *sync.WaitGroup, errch chan e
 
 	for {
 		select {
-		case _, ok := <-events:
+		case event, ok := <-events:
 			if !ok {
 				return
+			}
+
+			if !event.IsLast {
+				continue
 			}
 
 			if err := g.GenerateMap(g.updaterState, "", true); err != nil {
