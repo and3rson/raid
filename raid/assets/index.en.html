@@ -109,21 +109,32 @@ class="uri">https://telegram.me/air_alert_ua</a>.</p>
 Crimea is absent from this list since no information is available. But
 we all know that Crimea is Ukraine.</p>
 <p>Service works in two modes: HTTP and TCP.</p>
-<p>You can also use our static map: <a
-href="https://alerts.com.ua/map.png"
+<p>You can use our static map: <a href="https://alerts.com.ua/map.png"
 class="uri">https://alerts.com.ua/map.png</a></p>
+<p>You can also retrieve history of all alerts as time series dump (see
+section A2).</p>
 <figure>
-<img src="/map.png" id="map" alt="Карта Тривог" />
-<figcaption aria-hidden="true">Карта Тривог</figcaption>
+<img src="/map.png" id="map" alt="Alert Map" />
+<figcaption aria-hidden="true">Alert Map</figcaption>
 </figure>
+<div class="warning">
+<p>Please note that this is not an official service. We are not
+responsible for any damages that may be done to other parties with our
+service.</p>
+</div>
+<div class="warning">
+<p>You can use our API for any purpose, even commercially. The only
+exception is: using our API to perform destructive actions against
+Ukraine is strictly prohibited. This is considered a felony and will be
+reported to Security Service of Ukraine. If you’re a russian swine, you
+will be found and charged with anal prosecution.</p>
+</div>
 <script type="text/javascript">
 var map = document.getElementById('map');
 window.setInterval(function() {
   map.src = map.src.split('?')[0] + '?' + new Date().getTime();
 }, 5000);
 </script>
-<p>You can also retrieve history of all alerts as time series dump (see
-section A2).</p>
 <h2 id="a.-http-mode">A. HTTP mode</h2>
 <h3 id="a1.-authentication">A1. Authentication</h3>
 <p>You will need a key to use this API.</p>

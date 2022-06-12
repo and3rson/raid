@@ -110,7 +110,7 @@ func (t *TCPServer) HandleConn(ctx context.Context, conn net.Conn) {
 		}
 	}
 
-	log.Debugf("tcpserver: client auth success: %v", authSuccess)
+	log.Debugf("tcpserver: client auth success: %v, key: %v", authSuccess, apiKey)
 
 	if !authSuccess {
 		_, _ = conn.Write([]byte("a:wrong_api_key\n"))

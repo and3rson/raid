@@ -10,9 +10,19 @@ Only regions are supported at this moment - 24 total plus Kyiv city. Crimea is a
 
 Service works in two modes: HTTP and TCP.
 
-You can also use our static map: <https://alerts.com.ua/map.png>
+You can use our static map: <https://alerts.com.ua/map.png>
 
-![Карта Тривог](/map.png){#map}
+You can also retrieve history of all alerts as time series dump (see section A2).
+
+![Alert Map](/map.png){#map}
+
+::: {.warning}
+Please note that this is not an official service. We are not responsible for any damages that may be done to other parties with our service.
+:::
+
+::: {.warning}
+You can use our API for any purpose, even commercially. The only exception is: using our API to perform destructive actions against Ukraine is strictly prohibited. This is considered a felony and will be reported to Security Service of Ukraine. If you're a russian swine, you will be found and charged with anal prosecution.
+:::
 
 <script type="text/javascript">
 var map = document.getElementById('map');
@@ -20,8 +30,6 @@ window.setInterval(function() {
   map.src = map.src.split('?')[0] + '?' + new Date().getTime();
 }, 5000);
 </script>
-
-You can also retrieve history of all alerts as time series dump (see section A2).
 
 ## A. HTTP mode
 
