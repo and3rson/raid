@@ -2,6 +2,8 @@ package raid
 
 import (
 	"sync"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type FilterFunc[T interface{}] func(T) bool
@@ -23,13 +25,26 @@ func NewTopic[T interface{}]() *Topic[T] {
 	}
 }
 
+func (t *Topic[T]) sendSafe(ch chan T, payload T) (ok bool) {
+	// https://groups.google.com/g/golang-nuts/c/6bL3lXoC4Ek
+	// TODO: When channel write is blocked, it's better to make Broadcast unlock mutex
+	// to give subscribers time to unsubscribe.
+	defer func() { recover() }()
+	ch <- payload
+
+	return true
+}
+
 func (t *Topic[T]) Broadcast(payload T) {
 	t.mutex.Lock()
 	defer t.mutex.Unlock()
 
 	for ch, filter := range t.channels {
 		if filter(payload) {
-			ch <- payload
+			if len(ch) == cap(ch) {
+				log.Warnf("pubsub: broadcast: channel %s is full, will block", t.subscriberNames[ch])
+			}
+			t.sendSafe(ch, payload)
 		}
 	}
 }
@@ -46,10 +61,12 @@ func (t *Topic[T]) Subscribe(name string, filter func(T) bool) chan T {
 }
 
 func (t *Topic[T]) Unsubscribe(ch chan T) {
+	// https://groups.google.com/g/golang-nuts/c/6bL3lXoC4Ek
+	close(ch)
+
 	t.mutex.Lock()
 	defer t.mutex.Unlock()
 
 	delete(t.channels, ch)
 	delete(t.subscriberNames, ch)
-	close(ch)
 }

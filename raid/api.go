@@ -37,6 +37,16 @@ type StatesResponse struct {
 	LastUpdate time.Time `json:"last_update"`
 }
 
+type ShortState struct {
+	ID    int  `json:"id"`
+	Alert bool `json:"alert"`
+}
+
+type StatesShortResponse struct {
+	States     []ShortState `json:"states"`
+	LastUpdate time.Time    `json:"last_update"`
+}
+
 type StateResponse struct {
 	*State     `json:"state"`
 	LastUpdate time.Time `json:"last_update"`
@@ -159,6 +169,8 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 			id, _ = strconv.Atoi(idStr)
 		}
 
+		short := r.URL.Query().Has("short")
+
 		rw.Header().Add("Content-Type", "application/json")
 		rw.WriteHeader(200)
 		enc := json.NewEncoder(rw)
@@ -180,10 +192,21 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 				a.updaterState.LastUpdate,
 			})
 		} else {
-			_ = enc.Encode(StatesResponse{
-				a.updaterState.States,
-				a.updaterState.LastUpdate,
-			})
+			if short {
+				shortStates := []ShortState{}
+				for _, state := range a.updaterState.States {
+					shortStates = append(shortStates, ShortState{ID: state.ID, Alert: state.Alert})
+				}
+				_ = enc.Encode(StatesShortResponse{
+					shortStates,
+					a.updaterState.LastUpdate,
+				})
+			} else {
+				_ = enc.Encode(StatesResponse{
+					a.updaterState.States,
+					a.updaterState.LastUpdate,
+				})
+			}
 		}
 	}
 	apiMux.HandleFunc("/states", statesHandleFunc)
@@ -201,7 +224,7 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 			log.Infof("api: subscribe to events for state %d", id)
 		}
 
-		events := a.updates.Subscribe("api", func(u Update) bool {
+		events := a.updates.Subscribe("api-"+r.RemoteAddr, func(u Update) bool {
 			return u.IsFresh && (id == 0 || id == u.State.ID)
 		})
 		defer func() {

@@ -139,7 +139,7 @@ func (t *TCPServer) HandleConn(ctx context.Context, conn net.Conn) {
 		}
 	}
 
-	events := t.updates.Subscribe("tcpserver", func(u Update) bool {
+	events := t.updates.Subscribe("tcpserver-"+conn.RemoteAddr().String(), func(u Update) bool {
 		return u.IsFresh && (id == 0 || id == u.State.ID)
 	})
 
@@ -162,12 +162,14 @@ func (t *TCPServer) HandleConn(ctx context.Context, conn net.Conn) {
 				alert = 1
 			}
 
+			conn.SetWriteDeadline(time.Now().Add(time.Second * 5))
 			if _, err := conn.Write([]byte(fmt.Sprintf("s:%d=%d\n", event.State.ID, alert))); err != nil {
 				log.Errorf("tcpserver: write state: %v", err)
 
 				return
 			}
 		case <-time.After(time.Second * 15):
+			conn.SetWriteDeadline(time.Now().Add(time.Second * 5))
 			if _, err := conn.Write([]byte(fmt.Sprintf("p:%d\n", rand.Intn(10000)))); err != nil {
 				log.Errorf("tcpserver: write ping: %v", err)
 
