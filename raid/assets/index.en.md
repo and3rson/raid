@@ -80,6 +80,8 @@ Returns the list of regions with their statuses.
 }
 ```
 
+You can also append `?short` to URL in order to receive only `id` and `alert` fields to reduce bandwidth.
+
 #### `GET /api/states/<ID>`
 
 Returns status for single region.
