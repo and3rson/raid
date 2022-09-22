@@ -9,6 +9,7 @@ import (
 	"io/fs"
 	"net/http"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -137,7 +138,20 @@ func (a *APIServer) CreateRouter(ctx context.Context) *mux.Router {
 		}),
 		RateLimiter: a.addrRateLimiter,
 		VaryBy: &throttled.VaryBy{
-			RemoteAddr: true,
+			Custom: func(r *http.Request) string {
+				realAddr := r.RemoteAddr
+				forwardedAddr := r.Header.Get("X-Forwarded-For")
+				if forwardedAddr != "" {
+					realAddr = forwardedAddr
+
+					ips := strings.Split(realAddr, " ")
+					if len(ips) > 1 {
+						realAddr = ips[0]
+					}
+				}
+
+				return realAddr
+			},
 		},
 	}
 
