@@ -103,7 +103,7 @@ func (u *Updater) Run(ctx context.Context, wg *sync.WaitGroup, errch chan error)
 
 		u.ProcessMessages(ctx, messages, false)
 
-		u.updaterState.LastUpdate = time.Now()
+		u.updaterState.LastUpdate = time.Now().In(u.timezone)
 
 		wait = time.After(2 * time.Second)
 	} else {
@@ -128,7 +128,7 @@ func (u *Updater) Run(ctx context.Context, wg *sync.WaitGroup, errch chan error)
 			continue
 		}
 
-		u.updaterState.LastUpdate = time.Now()
+		u.updaterState.LastUpdate = time.Now().In(u.timezone)
 
 		if len(messages) > 0 {
 			log.Infof("updater: fetch %d new messages", len(messages))

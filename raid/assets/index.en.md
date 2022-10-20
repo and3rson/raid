@@ -243,7 +243,7 @@ Source code for this service can be found here: <https://github.com/and3rson/rai
 
 I support and preach the principles of open data and FOSS.
 
-I believe that everyone should be allowed to process any **information which is publicly available** in any ways they choose.
+I believe that everyone should be allowed to process any **information which is publicly available** in any ways they choose, unless they are harming others.
 
 > "*But... Doesn't "free" mean "free of charge"? Isn't free and "libre" the same?*"
 
