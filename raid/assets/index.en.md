@@ -31,6 +31,11 @@ window.setInterval(function() {
 }, 5000);
 </script>
 
+### Our projects
+
+- <https://alerts.com.ua> - you are here.
+- [Спшенгло💥](https://t.me/spriaglo) - join our Telegram channel for more!
+
 ## A. HTTP mode
 
 ### A1. Authentication
