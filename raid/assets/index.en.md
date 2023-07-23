@@ -25,10 +25,10 @@ You can use our API for any purpose, even commercially. The only exception is: u
 :::
 
 <script type="text/javascript">
-var map = document.getElementById('map');
+var map = document.querySelector('#map img');
 window.setInterval(function() {
   map.src = map.src.split('?')[0] + '?' + new Date().getTime();
-}, 5000);
+}, 30000);
 </script>
 
 ### Our projects
@@ -237,6 +237,12 @@ Sample TCP session (prefix `>` means serverbound, `<` means clientbound, `#` den
 < p:8321                 # Ping packet
 < p:3985                 # ...
 ```
+
+### Code examples
+
+  - Python: <https://replit.com/@and3rson/Python-example-for-alertscomua#main.py>
+  - Browser JavaScript: <https://codesandbox.io/s/goofy-elgamal-mkdkzv?file=/src/App.js>
+  - ESP8266 project: <https://wokwi.com/projects/330842127136195154>
 
 ### Use the source, Luke
 

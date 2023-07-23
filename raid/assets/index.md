@@ -25,10 +25,10 @@
 :::
 
 <script type="text/javascript">
-var map = document.getElementById('map');
+var map = document.querySelector('#map img');
 window.setInterval(function() {
   map.src = map.src.split('?')[0] + '?' + new Date().getTime();
-}, 5000);
+}, 30000);
 </script>
 
 ### Наші проєкти
@@ -167,7 +167,7 @@ data: null
 
 TCP-сервер працює за адресою `tcp.alerts.com.ua` на порті `1024`.
 
-Приклад проекту для ESP8266: <https://wokwi.com/projects/330842127136195154>
+Приклад проєкту для ESP8266: <https://wokwi.com/projects/330842127136195154>
 
 ### B1. Структура пакетів
 
@@ -237,6 +237,12 @@ TCP-сервер працює за адресою `tcp.alerts.com.ua` на по�
 < p:8321                 # Пінг-пакет
 < p:3985                 # ...
 ```
+
+### Приклади коду
+
+  - Python: <https://replit.com/@and3rson/Python-example-for-alertscomua#main.py>
+  - Браузерний JavaScript: <https://codesandbox.io/s/goofy-elgamal-mkdkzv?file=/src/App.js>
+  - Проєкт для ESP8266: <https://wokwi.com/projects/330842127136195154>
 
 ### Use the source, Luke
 

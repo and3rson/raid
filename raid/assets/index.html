@@ -17,6 +17,8 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
     pre > code.sourceCode { white-space: pre; position: relative; }
     pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -83,7 +85,6 @@
     code span.va { color: #27aeae; } /* Variable */
     code span.vs { color: #da4453; } /* VerbatimString */
     code span.wa { color: #da4453; } /* Warning */
-    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="./style.css" />
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -119,8 +120,8 @@ href="https://alerts.com.ua/map.png"
 class="uri">https://alerts.com.ua/map.png</a></p>
 <p>Також ви можете отримувати історію всіх тривог у вигляді time series
 дампу (див. секцію A2).</p>
-<figure>
-<img src="/map.png" id="map" alt="Карта Тривог" />
+<figure id="map">
+<img src="/map.png" alt="Карта Тривог" />
 <figcaption aria-hidden="true">Карта Тривог</figcaption>
 </figure>
 <div class="warning">
@@ -135,10 +136,10 @@ class="uri">https://alerts.com.ua/map.png</a></p>
 знайдено і анально покарано.</p>
 </div>
 <script type="text/javascript">
-var map = document.getElementById('map');
+var map = document.querySelector('#map img');
 window.setInterval(function() {
   map.src = map.src.split('?')[0] + '?' + new Date().getTime();
-}, 5000);
+}, 30000);
 </script>
 <h3 id="наші-проєкти">Наші проєкти</h3>
 <ul>
@@ -271,7 +272,7 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="
 отримувати сповіщення через старі добрі TCP-сокети.</p>
 <p>TCP-сервер працює за адресою <code>tcp.alerts.com.ua</code> на порті
 <code>1024</code>.</p>
-<p>Приклад проекту для ESP8266: <a
+<p>Приклад проєкту для ESP8266: <a
 href="https://wokwi.com/projects/330842127136195154"
 class="uri">https://wokwi.com/projects/330842127136195154</a></p>
 <h3 id="b1.-структура-пакетів">B1. Структура пакетів</h3>
@@ -360,6 +361,18 @@ state-пакет.</p></li>
 <span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> s<span class="op">:</span><span class="dv">12</span><span class="op">=</span><span class="dv">0</span>                 # Відбій тривоги у Львівській області</span>
 <span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">8321</span>                 # Пінг<span class="op">-</span>пакет</span>
 <span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span> p<span class="op">:</span><span class="dv">3985</span>                 # <span class="op">...</span></span></code></pre></div>
+<h3 id="приклади-коду">Приклади коду</h3>
+<ul>
+<li>Python: <a
+href="https://replit.com/@and3rson/Python-example-for-alertscomua#main.py"
+class="uri">https://replit.com/@and3rson/Python-example-for-alertscomua#main.py</a></li>
+<li>Браузерний JavaScript: <a
+href="https://codesandbox.io/s/goofy-elgamal-mkdkzv?file=/src/App.js"
+class="uri">https://codesandbox.io/s/goofy-elgamal-mkdkzv?file=/src/App.js</a></li>
+<li>Проєкт для ESP8266: <a
+href="https://wokwi.com/projects/330842127136195154"
+class="uri">https://wokwi.com/projects/330842127136195154</a></li>
+</ul>
 <h3 id="use-the-source-luke">Use the source, Luke</h3>
 <p>Цю штуку зробив <a href="https://dun.ai">Andrew Dunai</a>.</p>
 <p>Початковий код знаходиться тут: <a
